@@ -19,6 +19,18 @@ public class CommonResponseDto<T> {
 		return ResponseEntity.ok(new CommonResponseDto<>(HttpStatus.OK, message, data));
 	}
 
+	public static <T> ResponseEntity<CommonResponseDto<T>> badRequest(String message) {
+		return ResponseEntity
+				.badRequest()
+				.body((new CommonResponseDto<>(HttpStatus.BAD_REQUEST, message, null)));
+	}
+
+	public static <T> ResponseEntity<CommonResponseDto<T>> of(
+			HttpStatus status, String message, T data
+	) {
+		return ResponseEntity.status(status).body(new CommonResponseDto<>(status, message, data));
+	}
+
 	public String getStatus() {
 		return status.toString();
 	}
