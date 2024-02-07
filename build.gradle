@@ -22,19 +22,29 @@ repositories {
 }
 
 dependencies {
+    // WEB
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    // MySql
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // JWT
+    compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // MySql
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Springdoc - Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
