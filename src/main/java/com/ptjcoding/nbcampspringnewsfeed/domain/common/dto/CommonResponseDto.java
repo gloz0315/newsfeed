@@ -10,13 +10,13 @@ import org.springframework.http.ResponseEntity;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponseDto<T> {
+
 	private HttpStatus status;
 	private String message;
 	private T data;
 
-	public static <T> ResponseEntity<CommonResponseDto<T>> ok(String message, T data){
-		return ResponseEntity
-				.ok(new CommonResponseDto<>(HttpStatus.OK, message, data));
+	public static <T> ResponseEntity<CommonResponseDto<T>> ok(String message, T data) {
+		return ResponseEntity.ok(new CommonResponseDto<>(HttpStatus.OK, message, data));
 	}
 
 	public String getStatus() {
