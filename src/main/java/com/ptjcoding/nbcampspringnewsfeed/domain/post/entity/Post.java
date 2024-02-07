@@ -18,10 +18,10 @@ public class Post extends Timestamped {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long postId;
+  @Column(nullable = false)
+  private Long memberId;
   @Column(nullable = false, length = 40)
   private String title;
-  @Column(nullable = false, length = 15)
-  private String nickname;
   @Column(nullable = false, length = 500)
   private String content;
   @Column(nullable = false)
