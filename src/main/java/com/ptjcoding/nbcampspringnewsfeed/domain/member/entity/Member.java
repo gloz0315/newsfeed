@@ -8,7 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +15,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "member")
 public class Member extends Timestamped {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false,unique = true,length = 40)
+	@Column(nullable = false, unique = true, length = 40)
 	private String email;
 
-	@Column(nullable = false,length = 15)
+	@Column(nullable = false, length = 15)
 	private String nickname;
 
 	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false,length = 10)
+	@Column(nullable = false, length = 10)
 	@Enumerated(value = EnumType.STRING)
 	private MemberRole role;
 

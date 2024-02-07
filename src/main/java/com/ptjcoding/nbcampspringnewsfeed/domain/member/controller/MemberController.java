@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/users")
 public class MemberController {
 	private final MemberServiceImpl memberService;
+
 	@PostMapping("/signup")
 	public ResponseEntity<CommonResponseDto<Void>> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
 		return memberService.signup(signupRequestDto);
