@@ -1,4 +1,4 @@
-package com.ptjcoding.nbcampspringnewsfeed.domain.common;
+package com.ptjcoding.nbcampspringnewsfeed.domain.common.entity;
 
 
 import jakarta.persistence.Column;
