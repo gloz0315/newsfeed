@@ -1,6 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
-
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
@@ -16,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-  MemberRepository memberRepository;
-  PostRepository postRepository;
+  private final MemberRepository memberRepository;
+  private final PostRepository postRepository;
 
   @Override
   @Transactional

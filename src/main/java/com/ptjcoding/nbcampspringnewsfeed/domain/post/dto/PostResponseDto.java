@@ -1,6 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.dto;
 
-
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.entity.Post;
 import java.time.LocalDateTime;
 import lombok.Getter;

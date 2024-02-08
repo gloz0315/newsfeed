@@ -1,6 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.entity;
 
-
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.entity.Timestamped;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import jakarta.persistence.Column;
