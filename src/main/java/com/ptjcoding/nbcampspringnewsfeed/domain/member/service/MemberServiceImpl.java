@@ -10,6 +10,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberReposit
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberSignupDto;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +56,13 @@ public class MemberServiceImpl implements MemberService {
     jwtProvider.addRefreshTokenToCookie(refreshToken, response);
 
     return CommonResponseDto.ok("로그인에 성공하셨습니다.", null);
+  }
+
+  @Override
+  public ResponseEntity<CommonResponseDto<Void>> logout(HttpServletRequest request) {
+
+    jwtProvider.expireToken(request);
+
+    return CommonResponseDto.ok("로그아웃 하였습니다.", null);
   }
 }

@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,12 @@ public class MemberController {
       HttpServletResponse response
   ) {
     return memberService.login(dto, response);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<CommonResponseDto<Void>> logout(
+      HttpServletRequest request
+  ) {
+    return memberService.logout(request);
   }
 }
