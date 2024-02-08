@@ -3,14 +3,11 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import java.io.Serializable;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
-@NoArgsConstructor
-public class CommentRequestDto implements Serializable {
+public class CommentRequestDto {
 
   @NotNull
   @NotBlank
