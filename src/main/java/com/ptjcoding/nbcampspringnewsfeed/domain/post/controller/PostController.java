@@ -5,9 +5,11 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +30,15 @@ public class PostController {
     Long memberId = postRequestDto.getMemberId(); // 테스트용 코드 이 후 토큰 검증으로 변경
     Post post = postService.createPost(postRequestDto, memberId);
     return CommonResponseDto.ok("게시글 작성 성공", new PostResponseDto(post));
+  }
+
+  @GetMapping
+  public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getPosts() {
+    List<PostResponseDto> postResponseDtos = postService
+        .getPosts()
+        .stream()
+        .map(PostResponseDto::new)
+        .toList();
+    return CommonResponseDto.ok("게시글 전체조회 성공", postResponseDtos);
   }
 }
