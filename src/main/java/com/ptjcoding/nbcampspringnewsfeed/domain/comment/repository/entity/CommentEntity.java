@@ -18,15 +18,15 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-@Entity
-@Table(name = "schedule")
 @Getter
 @Setter
 @Builder
-@SQLDelete(sql = "update comment set deleted_at = NOW() where id = ?")
-@SQLRestriction(value = "deleted_at is NULL")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "comment")
+@Entity
+@SQLDelete(sql = "update comment set deleted_at = NOW() where id = ?")
+@SQLRestriction(value = "deleted_at is NULL")
 public class CommentEntity extends Timestamped {
 
   @Id
