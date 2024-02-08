@@ -1,5 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.model;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.entity.PostEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,18 @@ public class Post {
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
   private LocalDateTime deletedDate;
+
+  public static Post of(PostEntity postEntity, String nickname) {
+    return Post
+        .builder()
+        .nickname(nickname)
+        .title(postEntity.getTitle())
+        .content(postEntity.getContent())
+        .agreeCount(postEntity.getAgreeCount())
+        .disagreeCount(postEntity.getDisagreeCount())
+        .createdDate(postEntity.getCreatedDate())
+        .updatedDate(postEntity.getUpdatedDate())
+        .deletedDate(postEntity.getDeletedDate())
+        .build();
+  }
 }
