@@ -4,7 +4,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateReques
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentServiceImpl;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/comments")
 public class CommentController {
 
-  private final CommentServiceImpl commentService;
+  private final CommentService commentService;
 
   @PostMapping
   public ResponseEntity<CommonResponseDto<CommentResponseDto>> createComment(

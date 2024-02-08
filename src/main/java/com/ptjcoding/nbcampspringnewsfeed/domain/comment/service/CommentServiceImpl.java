@@ -3,9 +3,9 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.comment.service;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.CommentRepositoryImpl;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentCreateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-  private final CommentRepositoryImpl commentRepository;
+  private final CommentRepository commentRepository;
 
   @Override
   public Comment createComment(CommentCreateRequestDto requestDto) {
