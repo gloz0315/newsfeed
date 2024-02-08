@@ -9,6 +9,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class PostRepositoryImpl implements PostRepository {
   private final PostJpaRepository postJpaRepository;
 
   @Override
+  @Transactional
   public Post createPost(PostRequestDto postRequestDto, Long memberId) {
     Member member = memberRepository.findById(memberId).orElse(null);
     if (member == null) {
