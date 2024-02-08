@@ -14,7 +14,7 @@ public enum MemberRole {
     return authority;
   }
 
-  public static class Authority {
+  private static class Authority {
 
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
