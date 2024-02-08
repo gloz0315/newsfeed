@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
   public Comment createComment(CommentRequestDto requestDto) {
     CommentCreateDto createDto = CommentCreateDto.builder()
         .content(requestDto.getContent())
-// !    .memberId(member.getMemberId())                                // TODO: need to add memberId
+        .memberId(1L)                                // ! TODO: need to add memberId
         .postId(requestDto.getPostId())
         .parentCommentId(requestDto.getParentCommentId())
         .build();
