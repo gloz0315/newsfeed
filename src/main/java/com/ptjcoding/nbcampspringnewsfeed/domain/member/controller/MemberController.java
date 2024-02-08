@@ -17,19 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
   private final MemberServiceImpl memberService;
 
   @PostMapping("/signup")
-  public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(@Validated @RequestBody SignupRequestDto dto) {
+  public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(
+      @Validated @RequestBody SignupRequestDto dto
+  ) {
     return memberService.signup(dto);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<CommonResponseDto<Void>> login(@Validated @RequestBody LoginRequestDto dto,
-      HttpServletResponse response) {
+  public ResponseEntity<CommonResponseDto<Void>> login(
+      @Validated @RequestBody LoginRequestDto dto,
+      HttpServletResponse response
+  ) {
     return memberService.login(dto, response);
   }
 }
