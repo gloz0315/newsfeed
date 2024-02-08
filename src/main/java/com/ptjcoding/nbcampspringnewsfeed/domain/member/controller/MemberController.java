@@ -3,10 +3,9 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.controller;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberServiceImpl;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/members")
 public class MemberController {
 
-  private final MemberServiceImpl memberService;
+  private final MemberService memberService;
 
   @PostMapping("/signup")
   public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(

@@ -1,9 +1,16 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.member.repository;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.Member;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberSignupDto;
 
-public interface MemberRepository extends JpaRepository<Member,Long> {
-  Optional<Member> findByEmail(String email);
+public interface MemberRepository {
+
+  void register(MemberSignupDto dto);
+
+  void checkEmail(String email);
+
+  Member checkPassword(LoginRequestDto dto);
+
+  Member findByIdOrElseThrow(Long id);
 }
