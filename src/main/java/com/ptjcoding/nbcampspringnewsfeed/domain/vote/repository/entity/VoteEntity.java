@@ -52,6 +52,7 @@ public class VoteEntity {
 
   private LocalDateTime deletedDate;
 
+
   public static VoteEntity of(VoteCreateDto createDto) {
     return VoteEntity.builder()
         .isAgree(createDto.getIsAgree())
