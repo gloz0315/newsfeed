@@ -1,7 +1,8 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.interceptor;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.Member;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.entity.MemberEntity;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.MemberJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Override
@@ -38,7 +39,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         try {
             if (StringUtils.hasText(token) && jwtProvider.validate(token)) {
                 // TODO: replace custom member exception
-                Member member = memberRepository.findByEmail(memberInfo.getSubject())
+                MemberEntity member = memberRepository.findByEmail(memberInfo.getSubject())
                         .orElseThrow(() ->
                                 new UsernameNotFoundException("잘못된 접근입니다."));
                 request.setAttribute("member", member);
