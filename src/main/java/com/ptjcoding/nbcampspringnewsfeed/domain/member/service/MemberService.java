@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface MemberService {
 
-  @Transactional
   ResponseEntity<CommonResponseDto<Void>> signup(
       SignupRequestDto signupRequestDto);
 
