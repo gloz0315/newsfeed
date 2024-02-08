@@ -1,10 +1,8 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.dto;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import org.springframework.http.ResponseEntity;
 
 @Getter
 public class PostResponseDto {
@@ -27,9 +25,5 @@ public class PostResponseDto {
     this.createdDate = post.getCreatedDate();
     this.updatedDate = post.getUpdatedDate();
     this.deleteDate = post.getDeletedDate();
-  }
-
-  public static ResponseEntity<CommonResponseDto<PostResponseDto>> from(PostResponseDto postResponseDto) {
-    return CommonResponseDto.ok("게시글 작성 성공", postResponseDto);
   }
 }
