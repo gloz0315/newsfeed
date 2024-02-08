@@ -8,6 +8,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentU
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // ! TODO: need to verify member before repository calls
 
@@ -18,6 +19,7 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepository commentRepository;
 
   @Override
+  @Transactional
   public Comment createComment(CommentCreateRequestDto requestDto) {
     CommentCreateDto createDto = CommentCreateDto.builder()
         .content(requestDto.getContent())
@@ -30,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
+  @Transactional
   public Comment updateComment(Long commentId, CommentUpdateRequestDto requestDto) {
     CommentUpdateDto updateDto = CommentUpdateDto.of(requestDto);
 
@@ -37,6 +40,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
+  @Transactional
   public void deleteComment(Long commentId) {
     commentRepository.deleteById(commentId);
   }

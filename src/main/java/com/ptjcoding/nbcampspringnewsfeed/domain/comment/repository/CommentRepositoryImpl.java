@@ -9,7 +9,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.C
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,13 +17,11 @@ public class CommentRepositoryImpl implements CommentRepository {
   private final CommentJpaRepository commentJpaRepository;
 
   @Override
-  @Transactional
   public Comment createComment(CommentCreateDto createDto) {
     return commentJpaRepository.save(CommentEntity.of(createDto)).toModel();
   }
 
   @Override
-  @Transactional
   public Comment updatecomment(long id, CommentUpdateDto updateDto) {
     CommentEntity commentEntity = commentJpaRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
@@ -35,7 +32,6 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  @Transactional
   public void deleteById(long id) {
     commentJpaRepository.deleteById(id);
   }
