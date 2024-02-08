@@ -1,11 +1,11 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.controller;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.entity.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentServiceImpl;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// ! TODO: User 검증 작업 추가 필요
-
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/comments")
 public class CommentController {
@@ -37,7 +35,7 @@ public class CommentController {
   public ResponseEntity<CommonResponseDto<Comment>> updateComment(
       @Valid @RequestBody CommentRequestDto requestDto, @PathVariable Long commentId
   ) {
-    Comment comment = commentService.updateComment(requestDto, commentId);
+    Comment comment = commentService.updateComment(commentId, requestDto);
 
     return CommonResponseDto.ok("댓글 수정 성공", comment);
   }
@@ -46,10 +44,7 @@ public class CommentController {
   public ResponseEntity<CommonResponseDto<Object>> deleteComment(
       @PathVariable Long commentId
   ) {
-    boolean isSucceed = commentService.deleteComment(commentId);
-    if (isSucceed) {
-      return CommonResponseDto.badRequest("댓글 삭제 실패");
-    }
+    commentService.deleteComment(commentId);
 
     return CommonResponseDto.ok("댓글 삭제 성공", null);
   }
