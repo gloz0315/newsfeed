@@ -56,6 +56,7 @@ public class MemberEntity extends Timestamped {
   }
 
   public Member toModel() {
+
     return Member.builder()
         .id(id)
         .email(email)
