@@ -7,6 +7,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.util.JwtUtil;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class MemberServiceImpl implements MemberService {
     String password = loginRequestDto.getPassword();
 
     Member member = memberRepository.findByEmail(email).orElseThrow(
-        () -> new IllegalArgumentException("해당 이메일이 존재하지 않습니다.")
+        () -> new EntityNotFoundException("해당 이메일이 존재하지 않습니다.")
     );
 
     if(!passwordEncoder.matches(password, member.getPassword())) {
