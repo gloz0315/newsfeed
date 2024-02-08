@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.service;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.CommentRepositoryImpl;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentCreateDto;
@@ -17,7 +18,7 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepositoryImpl commentRepository;
 
   @Override
-  public Comment createComment(CommentRequestDto requestDto) {
+  public Comment createComment(CommentCreateRequestDto requestDto) {
     CommentCreateDto createDto = CommentCreateDto.builder()
         .content(requestDto.getContent())
         .memberId(1L)                                // ! TODO: need to add memberId
@@ -29,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public Comment updateComment(Long commentId, CommentRequestDto requestDto) {
+  public Comment updateComment(Long commentId, CommentUpdateRequestDto requestDto) {
     CommentUpdateDto updateDto = CommentUpdateDto.of(requestDto);
 
     return commentRepository.updatecomment(commentId, updateDto);

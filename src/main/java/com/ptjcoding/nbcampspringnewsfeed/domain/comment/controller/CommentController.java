@@ -1,11 +1,11 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.controller;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentServiceImpl;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +26,7 @@ public class CommentController {
 
   @PostMapping
   public ResponseEntity<CommonResponseDto<CommentResponseDto>> createComment(
-      @Validated @RequestBody CommentRequestDto requestDto
+      @Validated @RequestBody CommentCreateRequestDto requestDto
   ) {
     Comment responseDto = commentService.createComment(requestDto);
 
@@ -35,7 +35,7 @@ public class CommentController {
 
   @PutMapping("/{commentId}")
   public ResponseEntity<CommonResponseDto<CommentResponseDto>> updateComment(
-      @Valid @RequestBody CommentRequestDto requestDto, @PathVariable Long commentId
+      @Validated @RequestBody CommentUpdateRequestDto requestDto, @PathVariable Long commentId
   ) {
     Comment responseDto = commentService.updateComment(commentId, requestDto);
 

@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
-public class CommentRequestDto {
+public class CommentCreateRequestDto {
 
   @NotNull
   @NotBlank
