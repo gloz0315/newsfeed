@@ -1,6 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.config;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.MemberJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.interceptor.AuthenticationInterceptor;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //@Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Override
