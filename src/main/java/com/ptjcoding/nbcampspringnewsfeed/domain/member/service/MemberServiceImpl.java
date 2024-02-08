@@ -4,9 +4,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.Member;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
-import com.ptjcoding.nbcampspringnewsfeed.global.util.JwtUtil;
+import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.ptjcoding.nbcampspringnewsfeed.domain.member.entity.MemberRole.USER;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
-  private final JwtUtil jwtUtil;
+  private final JwtProvider jwtProvider;
 
   @Override
   @Transactional
@@ -42,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
         .email(signupRequestDto.getEmail())
         .nickname(signupRequestDto.getNickname())
         .password(passwordEncoder.encode(signupRequestDto.getPassword()))
-        .role(MemberRole.USER)
+        .role(USER)
         .build();
 
     memberRepository.save(member);
@@ -63,7 +64,11 @@ public class MemberServiceImpl implements MemberService {
       throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
     }
 
-    response.addHeader(JwtUtil.AUTHORIZATION_HEADER_KEY, jwtUtil.generateToken(member.getEmail(),member.getRole().getAuthority()));
+    String accessToken = jwtProvider.generateAccessToken(email, USER.getAuthority());
+    String refreshToken = jwtProvider.generateRefreshToken(USER.getAuthority());
+
+    jwtProvider.addAccessTokenToCookie(accessToken, response);
+    jwtProvider.addRefreshTokenToCookie(refreshToken, response);
 
     return CommonResponseDto.ok("로그인에 성공하셨습니다.", null);
   }
