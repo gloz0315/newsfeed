@@ -1,9 +1,9 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 
 public interface PostService {
 
-  PostResponseDto createPost(PostRequestDto postRequestDto);
+  Post createPost(PostRequestDto postRequestDto, Long memberId);
 }

@@ -1,6 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.dto;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.post.entity.Post;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -12,16 +12,18 @@ public class PostResponseDto {
   private final String content;
   private final Long agreeCount;
   private final Long disagreeCount;
-  private final LocalDateTime created_date;
-  private final LocalDateTime updated_date;
+  private final LocalDateTime createdDate;
+  private final LocalDateTime updatedDate;
+  private final LocalDateTime deleteDate;
 
-  public PostResponseDto(Post post, String nickname) {
-    this.nickname = nickname;
+  public PostResponseDto(Post post) {
+    this.nickname = post.getNickname();
     this.title = post.getTitle();
     this.content = post.getContent();
     this.agreeCount = post.getAgreeCount();
     this.disagreeCount = post.getDisagreeCount();
-    this.created_date = post.getCreatedDate();
-    this.updated_date = post.getUpdatedDate();
+    this.createdDate = post.getCreatedDate();
+    this.updatedDate = post.getUpdatedDate();
+    this.deleteDate = post.getDeletedDate();
   }
 }
