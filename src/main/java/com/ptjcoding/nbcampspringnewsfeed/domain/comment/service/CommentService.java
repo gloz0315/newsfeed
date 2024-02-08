@@ -1,14 +1,14 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.entity.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 
 public interface CommentService {
 
   Comment createComment(CommentRequestDto requestDto);
 
-  Comment updateComment(CommentRequestDto requestDto, Long commentId);
+  Comment updateComment(Long commentId, CommentRequestDto requestDto);
 
-  boolean deleteComment(Long commentId);
+  void deleteComment(Long commentId);
 
 }
