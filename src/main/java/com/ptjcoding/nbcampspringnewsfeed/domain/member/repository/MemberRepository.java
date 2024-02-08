@@ -10,6 +10,8 @@ public interface MemberRepository {
 
   void checkEmail(String email);
 
+  void deleteMember(Long id);
+
   Member checkPassword(LoginRequestDto dto);
 
   Member findByIdOrElseThrow(Long id);

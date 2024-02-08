@@ -56,4 +56,14 @@ public class MemberRepositoryImpl implements MemberRepository {
       throw new IllegalArgumentException("해당 이메일이 존재합니다.");
     }
   }
+
+  @Override
+  @Transactional
+  public void deleteMember(Long id) {
+    MemberEntity memberEntity = memberJpaRepository.findById(id).orElseThrow(
+        () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
+    );
+
+    memberJpaRepository.delete(memberEntity);
+  }
 }

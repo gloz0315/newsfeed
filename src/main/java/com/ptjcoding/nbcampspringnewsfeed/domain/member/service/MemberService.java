@@ -17,4 +17,6 @@ public interface MemberService {
       HttpServletResponse response);
 
   ResponseEntity<CommonResponseDto<Void>> logout(HttpServletRequest request);
+
+  ResponseEntity<CommonResponseDto<Void>> delete(Long memberId);
 }
