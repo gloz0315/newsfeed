@@ -1,5 +1,8 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.entity;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteCreateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteUpdateDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -45,5 +48,20 @@ public class VoteEntity {
   private LocalDateTime votedDate;
 
   private LocalDateTime deletedDate;
+
+  public static VoteEntity of(VoteCreateDto createDto) {
+    return VoteEntity.builder()
+        .postId(createDto.getPostId())
+        .isAgree(createDto.getIsAgree())
+        .build();
+  }
+
+  public Vote toModel() {
+    return new Vote(voteId, postId, isAgree, votedDate);
+  }
+
+  public void update(VoteUpdateDto updateDto) {
+    this.isAgree = updateDto.getIsAgree();
+  }
 
 }
