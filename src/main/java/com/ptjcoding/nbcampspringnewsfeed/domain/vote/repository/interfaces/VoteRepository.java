@@ -10,7 +10,7 @@ public interface VoteRepository {
 
   Vote createVote(VoteCreateDto createDto);
 
-  Vote updateVote(Long id, VoteUpdateDto updateDto);
+  Vote updateVote(Long voteId, VoteUpdateDto updateDto);
 
   void deleteVoteById(Long id);
 
