@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.controller;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentServiceImpl;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
@@ -24,21 +25,21 @@ public class CommentController {
   private final CommentServiceImpl commentService;
 
   @PostMapping
-  public ResponseEntity<CommonResponseDto<Comment>> createComment(
+  public ResponseEntity<CommonResponseDto<CommentResponseDto>> createComment(
       @Validated @RequestBody CommentRequestDto requestDto
   ) {
-    Comment comment = commentService.createComment(requestDto);
+    Comment responseDto = commentService.createComment(requestDto);
 
-    return CommonResponseDto.ok("댓글 생성 성공", comment);
+    return CommonResponseDto.ok("댓글 생성 성공", CommentResponseDto.of(responseDto));
   }
 
   @PutMapping("/{commentId}")
-  public ResponseEntity<CommonResponseDto<Comment>> updateComment(
+  public ResponseEntity<CommonResponseDto<CommentResponseDto>> updateComment(
       @Valid @RequestBody CommentRequestDto requestDto, @PathVariable Long commentId
   ) {
-    Comment comment = commentService.updateComment(commentId, requestDto);
+    Comment responseDto = commentService.updateComment(commentId, requestDto);
 
-    return CommonResponseDto.ok("댓글 수정 성공", comment);
+    return CommonResponseDto.ok("댓글 수정 성공", CommentResponseDto.of(responseDto));
   }
 
   @DeleteMapping("/{commentId}")
