@@ -1,9 +1,9 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.config;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.interceptor.AuthenticationInterceptor;
-import com.ptjcoding.nbcampspringnewsfeed.global.util.JwtUtil;
+import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,11 +11,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //@Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-    private final JwtUtil jwtUtil;
+    private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor(jwtUtil))
+        registry.addInterceptor(new AuthenticationInterceptor(
+                        memberRepository,
+                        jwtProvider
+                ))
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
