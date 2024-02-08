@@ -28,6 +28,6 @@ public class MemberController {
 
 	@PostMapping("/login")
 	public ResponseEntity<CommonResponseDto<Void>> login(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-		return memberService.login(loginRequestDto,response);
+		return memberService.login(loginRequestDto, response);
 	}
 }
