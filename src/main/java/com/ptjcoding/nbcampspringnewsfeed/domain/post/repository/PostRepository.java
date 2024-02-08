@@ -1,8 +1,9 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.repository;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.post.entity.Post;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository {
 
+  Post createPost(PostRequestDto postRequestDto, Long memberId);
 }
