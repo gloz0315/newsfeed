@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @Table(name = "vote")
 @Entity
-@SQLDelete(sql = "update vote set deleted_date = NOW() where id = ?")
+@SQLDelete(sql = "update vote set deleted_date = NOW() where vote_id = ?")
 @SQLRestriction(value = "deleted_date is NULL")
 @EntityListeners(AuditingEntityListener.class)
 public class VoteEntity {
@@ -36,6 +36,9 @@ public class VoteEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long voteId;
+
+  @Column(nullable = false)
+  private Long memberId;
 
   @Column(nullable = false)
   private Long postId;
@@ -51,8 +54,9 @@ public class VoteEntity {
 
   public static VoteEntity of(VoteCreateDto createDto) {
     return VoteEntity.builder()
-        .postId(createDto.getPostId())
         .isAgree(createDto.getIsAgree())
+        .memberId(createDto.getMemberId())
+        .postId(createDto.getPostId())
         .build();
   }
 
