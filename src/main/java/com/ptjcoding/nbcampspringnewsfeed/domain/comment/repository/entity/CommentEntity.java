@@ -25,8 +25,8 @@ import org.hibernate.annotations.SQLRestriction;
 @AllArgsConstructor
 @Table(name = "comment")
 @Entity
-@SQLDelete(sql = "update comment set deleted_at = NOW() where id = ?")
-@SQLRestriction(value = "deleted_at is NULL")
+@SQLDelete(sql = "update comment set deleted_date = NOW() where id = ?")
+@SQLRestriction(value = "deleted_date is NULL")
 public class CommentEntity extends Timestamped {
 
   @Id
