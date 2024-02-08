@@ -33,7 +33,10 @@ public class CommentRepositoryImpl implements CommentRepository {
 
   @Override
   public void deleteById(long id) {
-    commentJpaRepository.deleteById(id);
+    CommentEntity commentEntity = commentJpaRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+
+    commentJpaRepository.delete(commentEntity);
   }
 
 }
