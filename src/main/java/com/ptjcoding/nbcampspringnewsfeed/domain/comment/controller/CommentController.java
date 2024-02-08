@@ -7,6 +7,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class CommentController {
 
   @PostMapping
   public ResponseEntity<CommonResponseDto<Comment>> createComment(
-      @Valid @RequestBody CommentRequestDto requestDto
+      @Validated @RequestBody CommentRequestDto requestDto
   ) {
     Comment comment = commentService.createComment(requestDto);
 
