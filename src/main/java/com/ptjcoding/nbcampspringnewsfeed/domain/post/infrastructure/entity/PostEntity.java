@@ -80,4 +80,9 @@ public class PostEntity {
         .deletedDate(deletedDate)
         .build();
   }
+
+  public void update(PostRequestDto postRequestDto) {
+    this.title = postRequestDto.getTitle();
+    this.content = postRequestDto.getContent();
+  }
 }
