@@ -30,7 +30,6 @@ public class MemberServiceImpl implements MemberService {
   private final JwtProvider jwtProvider;
 
   @Override
-  @Transactional
   public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(
       SignupRequestDto dto
   ) {
