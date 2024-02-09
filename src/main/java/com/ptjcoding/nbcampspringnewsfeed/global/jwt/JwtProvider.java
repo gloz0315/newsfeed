@@ -1,6 +1,9 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.jwt;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.CustomJwtException;
+import com.ptjcoding.nbcampspringnewsfeed.global.jwt.repository.TokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -8,9 +11,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.net.URLDecoder;
@@ -23,11 +28,15 @@ import java.util.Date;
 import java.util.UUID;
 
 import static com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.JwtErrorCode.INVALID_TOKEN_EXCEPTION;
+import static com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState.*;
 
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
+    private final TokenRepository tokenRepository;
+    private final MemberRepository memberRepository;
     private static final String AUTHORIZATION_ACCESS_TOKEN_HEADER_KEY = "Authorization";
     private static final String AUTHORIZATION_REFRESH_TOKEN_HEADER_KEY = "RefreshToken";
     private static final String AUTHORIZATION_KEY = "Auth";
@@ -47,24 +56,36 @@ public class JwtProvider {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateAccessToken(final String email, final String role) {
-        return generateToken(email, role, ACCESS_TOKEN_VALID_TIME);
+    public String generateAccessToken(
+            final Long id,
+            final String role
+    ) {
+        return generateToken(String.valueOf(id), role, ACCESS_TOKEN_VALID_TIME);
     }
 
-    public String generateRefreshToken(final String role) {
+    @Transactional
+    public String generateRefreshToken(
+            Long memberId,
+            final String role
+    ) {
         String uuid = UUID.randomUUID().toString();
-        return generateToken(uuid, role, REFRESH_TOKEN_VALID_TIME);
+        String token = generateToken(uuid, role, REFRESH_TOKEN_VALID_TIME);
+
+        tokenRepository.deleteByMemberId(memberId);
+        tokenRepository.register(memberId, substringToken(token));
+
+        return token;
     }
 
     private String generateToken(
-            final String email,
+            final String info,
             final String role,
             Long validTime
     ) {
         Date now = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email)
+                        .setSubject(info)
                         .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(now.getTime() + validTime))
                         .setIssuedAt(now)
@@ -72,9 +93,11 @@ public class JwtProvider {
                         .compact();
     }
 
-    private void addTokenToCookie(final String token,
-                                 final String headerField,
-                                 final HttpServletResponse response){
+    private void addTokenToCookie(
+            final String token,
+            final String headerField,
+            final HttpServletResponse response
+    ) {
         String newToken = URLEncoder.encode(token, StandardCharsets.UTF_8)
                 .replace("\\+", "%20");
 
@@ -83,6 +106,7 @@ public class JwtProvider {
 
         response.addCookie(cookie);
     }
+
     public void addAccessTokenToCookie(final String token, final HttpServletResponse response) {
         addTokenToCookie(token, AUTHORIZATION_ACCESS_TOKEN_HEADER_KEY, response);
     }
@@ -99,29 +123,39 @@ public class JwtProvider {
         return tokenValue.substring(BEARER_PREFIX_LENGTH);
     }
 
-    public Claims getMemberInfoFromToken(final String token) {
-        return Jwts.parserBuilder()
+    public void setMemberInfoToRequest(
+            final String token,
+            final HttpServletRequest request
+    ) {
+        Claims body = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
+        Long memberId = Long.parseLong(body.getSubject());
+        Member member = memberRepository.findByIdOrElseThrow(memberId);
+
+        request.setAttribute("member", member);
     }
 
-    public String getRoleFromClaim(Claims claims){
+    public String getRoleFromClaim(Claims claims) {
         return (String) claims.get(AUTHORIZATION_KEY);
     }
 
 
-    public String getAccessTokenFromRequest(final HttpServletRequest request){
+    public String getAccessTokenFromRequest(final HttpServletRequest request) {
         return getTokenFromRequest(request, AUTHORIZATION_ACCESS_TOKEN_HEADER_KEY);
     }
 
-    public String getRefreshTokenFromRequest(final HttpServletRequest request){
-        return getTokenFromRequest(request, AUTHORIZATION_ACCESS_TOKEN_HEADER_KEY);
+    public String getRefreshTokenFromRequest(final HttpServletRequest request) {
+        return getTokenFromRequest(request, AUTHORIZATION_REFRESH_TOKEN_HEADER_KEY);
     }
 
-    private String getTokenFromRequest(final HttpServletRequest request,
-                                      final String headerField) {
+    private String getTokenFromRequest(
+            final HttpServletRequest request,
+            final String headerField
+    ) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
@@ -138,22 +172,50 @@ public class JwtProvider {
         return URLDecoder.decode(findCookie.getValue(), StandardCharsets.UTF_8);
     }
 
-    public boolean validate(final String token) {
+    public TokenState checkTokenState(final String token) {
+        if (!StringUtils.hasText(token)) {
+            return INVALID;
+        }
+
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            return VALID;
         } catch (SecurityException | MalformedJwtException |
                  SignatureException e) {
             log.error("[Invalid JWT signature]", e);
+            return INVALID;
         } catch (ExpiredJwtException e) {
             log.error("[Expired JWT token]", e);
+            return EXPIRED;
         } catch (UnsupportedJwtException e) {
             log.error("[Unsupported JWT token]", e);
+            return INVALID;
         } catch (IllegalArgumentException e) {
             log.error("[JWT claims is empty]", e);
+            return INVALID;
+        }
+    }
+
+    @Transactional
+    public String reGenerateAccessToken(HttpServletRequest request) {
+        String refreshTokenValue = getRefreshTokenFromRequest(request);
+        String refreshToken = substringToken(refreshTokenValue);
+        TokenState state = checkTokenState(refreshToken);
+
+        if (state.equals(INVALID)) {
+            log.info("[Refresh token invalid] {}", refreshToken);
+            throw new CustomJwtException(INVALID_TOKEN_EXCEPTION);
         }
 
-        return false;
+        if (state.equals(EXPIRED)) {
+            log.info("[Refresh token expired] {}", refreshToken);
+            tokenRepository.deleteToken(refreshToken);
+            throw new CustomJwtException(INVALID_TOKEN_EXCEPTION);
+        }
+
+        Long memberId = tokenRepository.findMemberIdByToken(refreshToken);
+        Member member = memberRepository.findByIdOrElseThrow(memberId);
+        return generateAccessToken(member.getId(), member.getRole().getAuthority());
     }
 
     public void expireToken(final HttpServletRequest request) {
