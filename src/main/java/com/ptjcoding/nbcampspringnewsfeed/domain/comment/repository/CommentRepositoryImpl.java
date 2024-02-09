@@ -7,6 +7,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.entity.Comme
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,12 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Comment createComment(CommentCreateDto createDto) {
     return commentJpaRepository.save(CommentEntity.of(createDto)).toModel();
+  }
+
+  @Override
+  public List<Comment> getCommentsByPostId(Long postId) {
+    List<CommentEntity> commentEntities = commentJpaRepository.findAllByPostId(postId);
+    return commentEntities.stream().map(CommentEntity::toModel).toList();
   }
 
   @Override
