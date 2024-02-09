@@ -54,8 +54,8 @@ public class MemberServiceImpl implements MemberService {
   ) {
     Member member = memberRepository.checkPassword(dto);
 
-    String accessToken = jwtProvider.generateAccessToken(member.getEmail(), USER.getAuthority());
-    String refreshToken = jwtProvider.generateRefreshToken(USER.getAuthority());
+    String accessToken = jwtProvider.generateAccessToken(member.getId(), USER.getAuthority());
+    String refreshToken = jwtProvider.generateRefreshToken(member.getId(), USER.getAuthority());
 
     jwtProvider.addAccessTokenToCookie(accessToken, response);
     jwtProvider.addRefreshTokenToCookie(refreshToken, response);
