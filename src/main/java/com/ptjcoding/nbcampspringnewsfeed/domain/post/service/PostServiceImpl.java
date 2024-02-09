@@ -20,6 +20,12 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public List<Post> getPosts() {
-    return postRepository.getPost();
+    return postRepository.getPosts();
+  }
+
+  @Override
+  @Transactional
+  public Post updatePost(Long postId, PostRequestDto postRequestDto) {
+    return postRepository.updatePost(postId, postRequestDto);
   }
 }
