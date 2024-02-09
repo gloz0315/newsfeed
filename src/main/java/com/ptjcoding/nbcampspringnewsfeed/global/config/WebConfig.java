@@ -4,11 +4,11 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.MemberJpa
 import com.ptjcoding.nbcampspringnewsfeed.global.interceptor.AuthenticationInterceptor;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-// TODO: yet disable interceptor
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
     private final MemberJpaRepository memberRepository;
@@ -27,8 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/*.ico",
                         "/error",
                         "/",
-                        "/api/**/users/login",
-                        "/api/**/users/signup",
+                        "/api/**/members/login",
+                        "/api/**/members/signup",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/v3/api-docs/**"
