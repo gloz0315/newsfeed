@@ -27,8 +27,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @AllArgsConstructor
 @Table(name = "post")
-@SQLDelete(sql = "update post set delete_date = NOW() where post_id = ?")
-@SQLRestriction(value = "delete_date is NULL")
+@SQLDelete(sql = "update post set deleted_date = NOW() where post_id = ?")
+@SQLRestriction(value = "deleted_date is NULL")
 @EntityListeners(AuditingEntityListener.class)
 public class PostEntity {
 
