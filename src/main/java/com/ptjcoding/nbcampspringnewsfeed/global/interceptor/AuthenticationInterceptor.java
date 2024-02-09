@@ -1,25 +1,20 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.interceptor;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.entity.MemberEntity;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.MemberJpaRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.CustomJwtException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.JwtErrorCode;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    private final MemberJpaRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Override
@@ -34,27 +29,22 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         String tokenValue = jwtProvider.getAccessTokenFromRequest(request);
         String token = jwtProvider.substringToken(tokenValue);
-        Claims memberInfo = jwtProvider.getMemberInfoFromToken(token);
+        TokenState state = jwtProvider.checkTokenState(token);
 
-        try {
-            if (StringUtils.hasText(token) && jwtProvider.validate(token)) {
-                // TODO: replace custom member exception
-                MemberEntity member = memberRepository.findByEmail(memberInfo.getSubject())
-                        .orElseThrow(() ->
-                                new UsernameNotFoundException("잘못된 접근입니다."));
-                request.setAttribute("member", member);
-            }
-        } catch (ExpiredJwtException e) {
-            String refreshTokenValue = jwtProvider.getRefreshTokenFromRequest(request);
-            String refreshToken = jwtProvider.substringToken(refreshTokenValue);
-
-            if (StringUtils.hasText(refreshToken) && jwtProvider.validate(refreshToken)) {
-                String newAccessToken = jwtProvider
-                        .generateAccessToken(memberInfo.getSubject(),
-                                jwtProvider.getRoleFromClaim(memberInfo));
-                jwtProvider.addAccessTokenToCookie(newAccessToken, response);
-            }
+        if (state.equals(TokenState.INVALID)) {
+            throw new CustomJwtException(JwtErrorCode.INVALID_TOKEN_EXCEPTION);
         }
+
+        if (state.equals(TokenState.EXPIRED)) {
+            String accessToken = jwtProvider.reGenerateAccessToken(request);
+            String subtractToken = jwtProvider.substringToken(accessToken);
+            jwtProvider.addAccessTokenToCookie(accessToken, response);
+            jwtProvider.setMemberInfoToRequest(subtractToken, request);
+        } else {
+            jwtProvider.setMemberInfoToRequest(token, request);
+        }
+
+
         return true;
     }
 
