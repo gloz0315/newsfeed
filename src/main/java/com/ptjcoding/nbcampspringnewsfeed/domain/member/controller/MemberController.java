@@ -5,10 +5,13 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +37,19 @@ public class MemberController {
       HttpServletResponse response
   ) {
     return memberService.login(dto, response);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<CommonResponseDto<Void>> logout(
+      HttpServletRequest request
+  ) {
+    return memberService.logout(request);
+  }
+
+  @DeleteMapping("/{memberId}")
+  public ResponseEntity<CommonResponseDto<Void>> delete(
+      @PathVariable("memberId") Long memberId
+  ) {
+    return memberService.delete(memberId);
   }
 }
