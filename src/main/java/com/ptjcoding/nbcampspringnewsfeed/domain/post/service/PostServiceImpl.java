@@ -20,7 +20,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public List<Post> getPosts() {
-    return postRepository.getPost();
+    return postRepository.getPosts();
   }
 
   @Override

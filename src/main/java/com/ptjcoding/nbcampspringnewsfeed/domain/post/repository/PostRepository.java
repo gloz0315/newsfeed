@@ -9,7 +9,7 @@ public interface PostRepository {
 
   Post createPost(PostRequestDto postRequestDto, Long memberId);
 
-  List<Post> getPost();
+  List<Post> getPosts();
 
   Post updatePost(Long postId, PostRequestDto postRequestDto);
 

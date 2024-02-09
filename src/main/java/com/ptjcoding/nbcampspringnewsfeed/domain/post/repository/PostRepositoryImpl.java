@@ -29,7 +29,7 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> getPost() {
+  public List<Post> getPosts() {
     List<PostEntity> postEntityList = postJpaRepository.findAllByOrderByCreatedDateDesc();
     List<Post> postList = new ArrayList<>();
     for (PostEntity postEntity : postEntityList) {
