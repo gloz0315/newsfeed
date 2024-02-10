@@ -47,10 +47,6 @@ public class MemberServiceImpl implements MemberService {
   public void login(LoginRequestDto dto, HttpServletResponse response) {
     Member member = memberRepository.checkPassword(dto);
 
-    if(blackListRepository.checkEmail(dto.getEmail())) {
-      return CommonResponseDto.badRequest("해당 이메일은 블랙리스트입니다.");
-    }
-
     String accessToken = jwtProvider.generateAccessToken(member.getId(), USER.getAuthority());
     String refreshToken = jwtProvider.generateRefreshToken(member.getId(), USER.getAuthority());
 
