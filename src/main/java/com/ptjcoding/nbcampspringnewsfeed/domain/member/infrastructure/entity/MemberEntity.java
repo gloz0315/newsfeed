@@ -32,7 +32,7 @@ public class MemberEntity extends Timestamped {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true, length = 40)
+  @Column(nullable = false, length = 40)
   private String email;
 
   @Column(nullable = false, length = 15)

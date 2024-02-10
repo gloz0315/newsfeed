@@ -28,7 +28,7 @@ public class MemberController {
   public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(
       @Validated @RequestBody SignupRequestDto dto
   ) {
-    return memberService.signup(dto);
+    return CommonResponseDto.ok("회원가입에 성공하셨습니다.", memberService.signup(dto));
   }
 
   @PostMapping("/login")
@@ -36,20 +36,26 @@ public class MemberController {
       @Validated @RequestBody LoginRequestDto dto,
       HttpServletResponse response
   ) {
-    return memberService.login(dto, response);
+    memberService.login(dto, response);
+
+    return CommonResponseDto.ok("로그인에 성공하셨습니다.", null);
   }
 
   @PostMapping("/logout")
   public ResponseEntity<CommonResponseDto<Void>> logout(
       HttpServletRequest request
   ) {
-    return memberService.logout(request);
+    memberService.logout(request);
+
+    return CommonResponseDto.ok("로그아웃 하였습니다.", null);
   }
 
   @DeleteMapping("/{memberId}")
   public ResponseEntity<CommonResponseDto<Void>> delete(
       @PathVariable("memberId") Long memberId
   ) {
-    return memberService.delete(memberId);
+    memberService.delete(memberId);
+
+    return CommonResponseDto.ok("성공적으로 회원 탈퇴하셨습니다.", null);
   }
 }

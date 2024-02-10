@@ -4,7 +4,6 @@ import static com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole.
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository.BlackListRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
-import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
@@ -16,7 +15,6 @@ import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,9 +29,7 @@ public class MemberServiceImpl implements MemberService {
   private final JwtProvider jwtProvider;
 
   @Override
-  public ResponseEntity<CommonResponseDto<MemberResponseDto>> signup(
-      SignupRequestDto dto
-  ) {
+  public MemberResponseDto signup(SignupRequestDto dto) {
     MemberSignupDto memberSignupDto = new MemberSignupDto(dto.getEmail(), dto.getNickname(),
         dto.getPassword(),
         dto.getCheckPassword());
@@ -41,17 +37,14 @@ public class MemberServiceImpl implements MemberService {
     memberRepository.checkEmail(memberSignupDto.getEmail());
     memberRepository.register(memberSignupDto);
 
-    return CommonResponseDto.ok("회원 가입에 성공하셨습니다.",
-        MemberResponseDto.builder()
-            .email(dto.getEmail())
-            .nickname(dto.getNickname())
-            .build());
+    return MemberResponseDto.builder()
+        .email(dto.getEmail())
+        .nickname(dto.getNickname())
+        .build();
   }
 
   @Override
-  public ResponseEntity<CommonResponseDto<Void>> login(
-      LoginRequestDto dto, HttpServletResponse response
-  ) {
+  public void login(LoginRequestDto dto, HttpServletResponse response) {
     Member member = memberRepository.checkPassword(dto);
 
     if(blackListRepository.checkEmail(dto.getEmail())) {
@@ -63,22 +56,16 @@ public class MemberServiceImpl implements MemberService {
 
     jwtProvider.addAccessTokenToCookie(accessToken, response);
     jwtProvider.addRefreshTokenToCookie(refreshToken, response);
-
-    return CommonResponseDto.ok("로그인에 성공하셨습니다.", null);
   }
 
   @Override
-  public ResponseEntity<CommonResponseDto<Void>> logout(HttpServletRequest request) {
+  public void logout(HttpServletRequest request) {
     jwtProvider.expireToken(request);
-
-    return CommonResponseDto.ok("로그아웃 하였습니다.", null);
   }
 
   @Override
-  public ResponseEntity<CommonResponseDto<Void>> delete(Long memberId) {
+  public void delete(Long memberId) {
     // TODO: 회원의 작성글과 댓글 삭제
     memberRepository.deleteMember(memberId);
-
-    return CommonResponseDto.ok("성공적으로 회원 탈퇴하셨습니다.", null);
   }
 }
