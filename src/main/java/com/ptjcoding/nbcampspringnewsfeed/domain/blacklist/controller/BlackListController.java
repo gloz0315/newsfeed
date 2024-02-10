@@ -30,6 +30,7 @@ public class BlackListController {
       return CommonResponseDto.badRequest("접근 권한이 없습니다.");
     }
 
-    return blackListService.register(dto);
+    blackListService.register(dto);
+    return CommonResponseDto.ok("블랙리스트에 추가하였습니다.", dto.getEmail());
   }
 }
