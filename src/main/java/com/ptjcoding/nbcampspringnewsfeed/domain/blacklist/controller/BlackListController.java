@@ -26,7 +26,7 @@ public class BlackListController {
       @RequestAttribute("member") Member member,
       @Validated @RequestBody BlackListRequestDto dto
   ) {
-    if (member.getRole().getAuthority().equals(MemberRole.USER.getAuthority())) {
+    if(member.getRole().equals(MemberRole.USER)) {
       return CommonResponseDto.badRequest("접근 권한이 없습니다.");
     }
 
