@@ -2,6 +2,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.service;
 
 import static com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole.USER;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository.BlackListRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
@@ -17,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
   // TODO: 댓글과 작성글에 대한 정보를 가져오기 위해 남김
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
+  private final BlackListRepository blackListRepository;
   private final JwtProvider jwtProvider;
 
   @Override
@@ -52,6 +53,10 @@ public class MemberServiceImpl implements MemberService {
       LoginRequestDto dto, HttpServletResponse response
   ) {
     Member member = memberRepository.checkPassword(dto);
+
+    if(blackListRepository.checkEmail(dto.getEmail())) {
+      return CommonResponseDto.badRequest("해당 이메일은 블랙리스트입니다.");
+    }
 
     String accessToken = jwtProvider.generateAccessToken(member.getId(), USER.getAuthority());
     String refreshToken = jwtProvider.generateRefreshToken(member.getId(), USER.getAuthority());
