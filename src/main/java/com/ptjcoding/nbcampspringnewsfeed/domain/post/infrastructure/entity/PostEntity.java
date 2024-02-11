@@ -1,5 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.entity;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,7 +69,7 @@ public class PostEntity {
         .build();
   }
 
-  public Post toModel(String nickname) {
+  public Post toModel(String nickname, List<Comment> commentList) {
     return Post
         .builder()
         .nickname(nickname)
@@ -75,6 +77,7 @@ public class PostEntity {
         .content(content)
         .agreeCount(agreeCount)
         .disagreeCount(disagreeCount)
+        .commentList(commentList)
         .createdDate(createdDate)
         .updatedDate(updatedDate)
         .deletedDate(deletedDate)

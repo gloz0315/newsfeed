@@ -1,5 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
   private final MemberService memberService;
+  private final CommentRepository commentRepository;
 
   @Override
   @Transactional
@@ -33,4 +36,12 @@ public class PostServiceImpl implements PostService {
   public Post updatePost(Long postId, PostRequestDto postRequestDto) {
     return postRepository.updatePost(postId, postRequestDto);
   }
+
+  @Override
+  public Post getPostByPostId(Long postId) {
+    Member member = memberService.getMemberByMemberId(postId);
+    List<Comment> commentList = commentRepository.getCommentsByPostId(postId);
+    return postRepository.getPostByPostId(postId, member, commentList);
+  }
+
 }

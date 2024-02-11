@@ -1,5 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.repository;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
@@ -24,7 +25,7 @@ public class PostRepositoryImpl implements PostRepository {
   @Transactional
   public Post createPost(PostRequestDto postRequestDto, Member member) {
     return postJpaRepository.save(PostEntity.of(postRequestDto, member.getId()))
-        .toModel(member.getNickname());
+        .toModel(member.getNickname(), null);
   }
 
   @Override
@@ -33,7 +34,7 @@ public class PostRepositoryImpl implements PostRepository {
     List<Post> postList = new ArrayList<>();
     for (PostEntity postEntity : postEntityList) {
       Member member = memberRepository.findByIdOrElseThrow(postEntity.getMemberId());
-      postList.add(postEntity.toModel(member.getNickname()));
+      postList.add(postEntity.toModel(member.getNickname(), null));
     }
     return postList;
   }
@@ -43,7 +44,13 @@ public class PostRepositoryImpl implements PostRepository {
     PostEntity postEntity = findByIdOrElseThrow(postId);
     postEntity.update(postRequestDto);
     Member member = memberRepository.findByIdOrElseThrow(postEntity.getMemberId());
-    return postEntity.toModel(member.getNickname());
+    return postEntity.toModel(member.getNickname(), null);
+  }
+
+  @Override
+  public Post getPostByPostId(Long postId, Member member, List<Comment> commentList) {
+    PostEntity postEntity = findByIdOrElseThrow(postId);
+    return postEntity.toModel(member.getNickname(), commentList);
   }
 
   @Override
