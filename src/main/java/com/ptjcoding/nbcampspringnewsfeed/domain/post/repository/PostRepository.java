@@ -10,4 +10,8 @@ public interface PostRepository {
   Post createPost(PostRequestDto postRequestDto, Member member);
 
   List<Post> getPosts();
+
+  Post getPost(Long postId);
+
+  Post findByIdOrElseThrow(Long postId);
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,5 +37,11 @@ public class PostController {
   public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getPosts() {
     return CommonResponseDto.ok("모든 게시글 조회 성공",
         postService.getPosts());
+  }
+
+  @GetMapping("/{postId}")
+  public ResponseEntity<CommonResponseDto<PostResponseDto>> getPost(@PathVariable Long postId) {
+    return CommonResponseDto.ok("게시글 단 건 조회 성공",
+        postService.getPost(postId));
   }
 }

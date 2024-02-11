@@ -8,7 +8,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,13 +29,20 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public List<PostResponseDto> getPosts() {
-    List<Post> postList = postRepository.getPosts();
-    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-    for (Post post : postList) {
-      Member member = memberService.getMemberByMemberId(post.getMemberId());
-      List<Comment> commentList = commentService.getCommentsByPostId(post.getPostId());
-      postResponseDtoList.add(PostResponseDto.from(post, member.getNickname(), commentList));
-    }
-    return postResponseDtoList;
+    return postRepository.getPosts()
+        .stream()
+        .map(post -> {
+          Member member = memberService.getMemberByMemberId(post.getMemberId());
+          List<Comment> commentList = commentService.getCommentsByPostId(post.getPostId());
+          return PostResponseDto.from(post, member.getNickname(), commentList);
+        }).toList();
+  }
+
+  @Override
+  public PostResponseDto getPost(Long postId) {
+    Post post = postRepository.getPost(postId);
+    Member member = memberService.getMemberByMemberId(post.getMemberId());
+    List<Comment> commentList = commentService.getCommentsByPostId(postId);
+    return PostResponseDto.from(post, member.getNickname(), commentList);
   }
 }
