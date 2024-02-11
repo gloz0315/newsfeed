@@ -74,11 +74,13 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional(readOnly = true)
   public List<Post> getPostsByMemberId(Long memberId) {
-    return postRepository.getPostsByMemberId(memberId);
+    Member member = memberService.getMemberByMemberId(memberId);
+    return postRepository.getPostsByMemberId(member.getId());
   }
 
   @Override
   public void deletePostsByMemberId(Long memberId) {
-    postRepository.deletePostsByMemberId(memberId);
+    Member member = memberService.getMemberByMemberId(memberId);
+    postRepository.deletePostsByMemberId(member.getId());
   }
 }
