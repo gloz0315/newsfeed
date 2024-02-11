@@ -1,5 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
@@ -12,10 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
+  private final MemberService memberService;
+
   @Override
   @Transactional
   public Post createPost(PostRequestDto postRequestDto, Long memberId) {
-    return postRepository.createPost(postRequestDto, memberId);
+    Member member = memberService.getMemberByMemberId(memberId);
+    return postRepository.createPost(postRequestDto, member);
   }
 
   @Override

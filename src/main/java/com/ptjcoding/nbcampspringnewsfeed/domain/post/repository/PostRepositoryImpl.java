@@ -22,9 +22,8 @@ public class PostRepositoryImpl implements PostRepository {
 
   @Override
   @Transactional
-  public Post createPost(PostRequestDto postRequestDto, Long memberId) {
-    Member member = memberRepository.findByIdOrElseThrow(memberId);
-    return postJpaRepository.save(PostEntity.of(postRequestDto, memberId))
+  public Post createPost(PostRequestDto postRequestDto, Member member) {
+    return postJpaRepository.save(PostEntity.of(postRequestDto, member.getId()))
         .toModel(member.getNickname());
   }
 
