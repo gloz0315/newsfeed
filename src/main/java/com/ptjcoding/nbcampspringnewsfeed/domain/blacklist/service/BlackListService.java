@@ -5,4 +5,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.dto.BlackListRequestD
 public interface BlackListService {
 
   void register(BlackListRequestDto dto);
+
+  void unregister(BlackListRequestDto dto);
 }

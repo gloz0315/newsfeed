@@ -4,5 +4,7 @@ public interface BlackListRepository {
 
   void register(String email);
 
+  void unregister(String email);
+
   boolean checkEmail(String email);
 }

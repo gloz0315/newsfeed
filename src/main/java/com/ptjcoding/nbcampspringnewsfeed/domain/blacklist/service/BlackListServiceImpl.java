@@ -4,9 +4,11 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.dto.BlackListRequestD
 import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository.BlackListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BlackListServiceImpl implements BlackListService {
 
   private final BlackListRepository blackListRepository;
@@ -14,5 +16,10 @@ public class BlackListServiceImpl implements BlackListService {
   @Override
   public void register(BlackListRequestDto dto) {
     blackListRepository.register(dto.getEmail());
+  }
+
+  @Override
+  public void unregister(BlackListRequestDto dto) {
+    blackListRepository.unregister(dto.getEmail());
   }
 }
