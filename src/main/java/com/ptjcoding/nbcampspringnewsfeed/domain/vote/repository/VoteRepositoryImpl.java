@@ -7,7 +7,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.entity.VoteEnti
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,10 +21,12 @@ public class VoteRepositoryImpl implements VoteRepository {
     return voteJpaRepository.save(VoteEntity.of(createDto)).toModel();
   }
 
-  public Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId) {
-    Optional<VoteEntity> voteEntity = voteJpaRepository.findByMemberIdAndPostId(memberId, postId);
+  public Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
+    VoteEntity voteEntity = voteJpaRepository.findByMemberIdAndPostId(memberId, postId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Vote by memberId" + memberId + "in postId" + postId + "not Found."));
 
-    return voteEntity.map(VoteEntity::toModel);
+    return voteEntity.toModel();
   }
 
   @Override

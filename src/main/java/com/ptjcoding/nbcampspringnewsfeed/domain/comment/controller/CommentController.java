@@ -22,13 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/comments")
 public class CommentController {
 
+  private static final Long MEMBER_ID = 1L; // ! TODO: Member Id for test
+
   private final CommentService commentService;
 
   @PostMapping
   public ResponseEntity<CommonResponseDto<CommentResponseDto>> createComment(
       @Validated @RequestBody CommentCreateRequestDto requestDto
   ) {
-    Comment responseDto = commentService.createComment(requestDto);
+    Comment responseDto = commentService.createComment(MEMBER_ID, requestDto);
 
     return CommonResponseDto.ok("댓글 생성 성공", CommentResponseDto.of(responseDto));
   }
@@ -37,7 +39,7 @@ public class CommentController {
   public ResponseEntity<CommonResponseDto<CommentResponseDto>> updateComment(
       @Validated @RequestBody CommentUpdateRequestDto requestDto, @PathVariable Long commentId
   ) {
-    Comment responseDto = commentService.updateComment(commentId, requestDto);
+    Comment responseDto = commentService.updateComment(MEMBER_ID, commentId, requestDto);
 
     return CommonResponseDto.ok("댓글 수정 성공", CommentResponseDto.of(responseDto));
   }
@@ -46,7 +48,7 @@ public class CommentController {
   public ResponseEntity<CommonResponseDto<Object>> deleteComment(
       @PathVariable Long commentId
   ) {
-    commentService.deleteComment(commentId);
+    commentService.deleteComment(MEMBER_ID, commentId);
 
     return CommonResponseDto.ok("댓글 삭제 성공", null);
   }
