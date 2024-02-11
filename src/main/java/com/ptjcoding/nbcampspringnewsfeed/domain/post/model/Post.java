@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Post {
 
-  private String nickname;
+  private Long postId;
+  private Long memberId;
   private String title;
   private String content;
   private Long agreeCount;
@@ -23,5 +24,4 @@ public class Post {
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
   private LocalDateTime deletedDate;
-
 }

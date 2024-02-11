@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 public class PostRequestDto {
 
-  private Long memberId; //테스트용 코드
   @NotBlank(message = "글 제목은 필수입력 항목입니다.")
   @Length(max = 40, message = "글 제목은 40자 이하여야 합니다.")
   private String title;
