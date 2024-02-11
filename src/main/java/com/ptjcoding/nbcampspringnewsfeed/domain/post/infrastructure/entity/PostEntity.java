@@ -70,6 +70,8 @@ public class PostEntity {
   public Post toModel() {
     return Post
         .builder()
+        .postId(postId)
+        .memberId(memberId)
         .title(title)
         .content(content)
         .agreeCount(agreeCount)
