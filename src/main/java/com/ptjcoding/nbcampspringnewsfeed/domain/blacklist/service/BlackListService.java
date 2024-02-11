@@ -6,5 +6,5 @@ public interface BlackListService {
 
   void register(BlackListRequestDto dto);
 
-  void unregister(BlackListRequestDto dto);
+  void deregister(BlackListRequestDto dto);
 }

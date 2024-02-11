@@ -19,7 +19,7 @@ public class BlackListServiceImpl implements BlackListService {
   }
 
   @Override
-  public void unregister(BlackListRequestDto dto) {
-    blackListRepository.unregister(dto.getEmail());
+  public void deregister(BlackListRequestDto dto) {
+    blackListRepository.deregister(dto.getEmail());
   }
 }

@@ -23,7 +23,7 @@ public class BlackListRepositoryImpl implements BlackListRepository {
   }
 
   @Override
-  public void unregister(String email) {
+  public void deregister(String email) {
     BlackListEntity findEntity = blackListJpaRepository.findByEmail(email)
         .orElseThrow(() -> new EntityNotFoundException("해당 이메일이 존재하지 않습니다."));
 

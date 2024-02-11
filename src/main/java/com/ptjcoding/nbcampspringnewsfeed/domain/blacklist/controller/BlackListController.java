@@ -36,8 +36,8 @@ public class BlackListController {
     return CommonResponseDto.ok("블랙리스트에 추가하였습니다.", dto.getEmail());
   }
 
-  @DeleteMapping("/unregister")
-  public ResponseEntity<CommonResponseDto<String>> unregister(
+  @DeleteMapping("/deregister")
+  public ResponseEntity<CommonResponseDto<String>> deregister(
       @RequestAttribute("member") Member member,
       @Validated @RequestBody BlackListRequestDto dto
   ) {
@@ -46,7 +46,7 @@ public class BlackListController {
       return CommonResponseDto.badRequest("접근 권한이 없습니다.");
     }
 
-    blackListService.unregister(dto);
+    blackListService.deregister(dto);
     return CommonResponseDto.ok("블랙리스트에 삭제하였습니다.", dto.getEmail());
   }
 }
