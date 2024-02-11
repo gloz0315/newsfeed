@@ -13,6 +13,7 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostResponseDto {
 
+  private final Long postId;
   private final String nickname;
   private final String title;
   private final String content;
@@ -25,6 +26,7 @@ public class PostResponseDto {
 
   public static PostResponseDto from(Post post, String nickname, List<Comment> commentList) {
     return PostResponseDto.builder()
+        .postId(post.getPostId())
         .nickname(nickname)
         .title(post.getTitle())
         .content(post.getContent())

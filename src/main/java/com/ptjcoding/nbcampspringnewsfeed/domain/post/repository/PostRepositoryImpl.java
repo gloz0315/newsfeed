@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.PostJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.entity.PostEntity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,5 +19,10 @@ public class PostRepositoryImpl implements PostRepository {
   @Transactional
   public Post createPost(PostRequestDto postRequestDto, Member member) {
     return postJpaRepository.save(PostEntity.of(postRequestDto, member.getId())).toModel();
+  }
+
+  @Override
+  public List<Post> getPosts() {
+    return postJpaRepository.findAll().stream().map(PostEntity::toModel).toList();
   }
 }

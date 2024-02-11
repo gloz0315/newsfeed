@@ -5,9 +5,11 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,5 +30,11 @@ public class PostController {
   ) {
     return CommonResponseDto.ok("게시글 작성 성공",
         postService.createPost(postRequestDto, member.getId()));
+  }
+
+  @GetMapping
+  public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getPosts() {
+    return CommonResponseDto.ok("모든 게시글 조회 성공",
+        postService.getPosts());
   }
 }
