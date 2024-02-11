@@ -1,7 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentCreateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentUpdateDto;
@@ -27,7 +25,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Comment getCommentByCommentId(Long commentId) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
-        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
 
     return commentEntity.toModel();
   }
@@ -49,9 +48,10 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public Comment updatecomment(long id, CommentUpdateDto updateDto) {
-    CommentEntity commentEntity = commentJpaRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+  public Comment updateComment(Long commentId, CommentUpdateDto updateDto) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
 
     commentEntity.update(updateDto);
 
@@ -59,9 +59,10 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public void deleteById(long id) {
-    CommentEntity commentEntity = commentJpaRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+  public void deleteByCommentId(Long commentId) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
 
     commentJpaRepository.delete(commentEntity);
   }

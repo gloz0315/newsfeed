@@ -15,9 +15,8 @@ public interface CommentRepository {
 
   List<Comment> getCommentsByMemberIdAndPostId(Long memberId, Long postId);
 
-  Comment updatecomment(long id, CommentUpdateDto dto);
+  Comment updateComment(Long commentId, CommentUpdateDto dto);
 
-  void deleteById(long id);
-
+  void deleteByCommentId(Long commentId);
 
 }
