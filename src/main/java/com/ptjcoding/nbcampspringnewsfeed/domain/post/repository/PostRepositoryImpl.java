@@ -38,14 +38,14 @@ public class PostRepositoryImpl implements PostRepository {
   @Override
   public Post findByIdOrElseThrow(Long postId) {
     return postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException(postId + "번 게시글은 없습니다.")
+        () -> new EntityNotFoundException("Post with id " + postId + " not found")
     ).toModel();
   }
 
   @Override
   public Post updatePost(Long postId, PostRequestDto postRequestDto) {
     PostEntity postEntity = postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException(postId + "번 게시글은 없습니다.")
+        () -> new EntityNotFoundException("Post with id " + postId + " not found")
     );
     postEntity.setTitle(postRequestDto.getTitle());
     postEntity.setContent(postRequestDto.getContent());
