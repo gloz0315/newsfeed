@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
   List<PostEntity> findAllByOrderByCreatedDateDesc();
+
+  List<PostEntity> findAllByMemberId(Long memberId);
+
+  void deleteByMemberId(Long memberId);
 }

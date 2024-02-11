@@ -28,6 +28,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<PostResponseDto> getPosts() {
     return postRepository.getPosts()
         .stream()
@@ -39,6 +40,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public PostResponseDto getPost(Long postId) {
     Post post = postRepository.getPost(postId);
     Member member = memberService.getMemberByMemberId(post.getMemberId());
@@ -67,5 +69,16 @@ public class PostServiceImpl implements PostService {
     commentService.getCommentsByPostId(postId)
         .forEach(comment -> commentService.deleteComment(comment.getCommentId()));
     postRepository.deletePost(postId);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<Post> getPostsByMemberId(Long memberId) {
+    return postRepository.getPostsByMemberId(memberId);
+  }
+
+  @Override
+  public void deletePostsByMemberId(Long memberId) {
+    postRepository.deletePostsByMemberId(memberId);
   }
 }

@@ -18,4 +18,8 @@ public interface PostRepository {
   Post updatePost(Long postId, PostRequestDto postRequestDto);
 
   void deletePost(Long postId);
+
+  List<Post> getPostsByMemberId(Long memberId);
+
+  void deletePostsByMemberId(Long memberId);
 }

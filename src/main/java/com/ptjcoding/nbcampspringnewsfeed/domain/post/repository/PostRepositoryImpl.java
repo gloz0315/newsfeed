@@ -24,7 +24,10 @@ public class PostRepositoryImpl implements PostRepository {
 
   @Override
   public List<Post> getPosts() {
-    return postJpaRepository.findAll().stream().map(PostEntity::toModel).toList();
+    return postJpaRepository.findAllByOrderByCreatedDateDesc()
+        .stream()
+        .map(PostEntity::toModel)
+        .toList();
   }
 
   @Override
@@ -52,5 +55,18 @@ public class PostRepositoryImpl implements PostRepository {
   @Override
   public void deletePost(Long postId) {
     postJpaRepository.deleteById(postId);
+  }
+
+  @Override
+  public List<Post> getPostsByMemberId(Long memberId) {
+    return postJpaRepository.findAllByMemberId(memberId)
+        .stream()
+        .map(PostEntity::toModel)
+        .toList();
+  }
+
+  @Override
+  public void deletePostsByMemberId(Long memberId) {
+    postJpaRepository.deleteByMemberId(memberId);
   }
 }
