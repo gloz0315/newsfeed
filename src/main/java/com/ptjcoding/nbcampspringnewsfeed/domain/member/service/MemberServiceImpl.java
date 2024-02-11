@@ -64,4 +64,9 @@ public class MemberServiceImpl implements MemberService {
     // TODO: 회원의 작성글과 댓글 삭제
     memberRepository.deleteMember(memberId);
   }
+
+  @Override
+  public Member getMemberByMemberId(Long memberId) {
+    return memberRepository.findByIdOrElseThrow(memberId);
+  }
 }
