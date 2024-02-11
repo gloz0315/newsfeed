@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,15 @@ public class PostController {
       ) {
     return CommonResponseDto.ok(postId + "번 게시글 수정 성공",
         postService.updatePost(postId, postRequestDto, member.getId()));
+  }
+
+  @DeleteMapping("/{postId}")
+  public ResponseEntity<CommonResponseDto<PostResponseDto>> updatePost
+      (
+          @PathVariable Long postId,
+          @RequestAttribute("member") Member member
+      ) {
+    postService.deletePost(postId, member.getId());
+    return CommonResponseDto.ok(postId + "번 게시글 삭제 성공", null);
   }
 }

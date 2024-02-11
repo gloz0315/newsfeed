@@ -48,4 +48,9 @@ public class PostRepositoryImpl implements PostRepository {
     postEntity.setContent(postRequestDto.getContent());
     return postEntity.toModel();
   }
+
+  @Override
+  public void deletePost(Long postId) {
+    postJpaRepository.deleteById(postId);
+  }
 }

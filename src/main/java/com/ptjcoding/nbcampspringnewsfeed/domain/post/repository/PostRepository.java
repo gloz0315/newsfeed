@@ -16,4 +16,6 @@ public interface PostRepository {
   Post findByIdOrElseThrow(Long postId);
 
   Post updatePost(Long postId, PostRequestDto postRequestDto);
+
+  void deletePost(Long postId);
 }

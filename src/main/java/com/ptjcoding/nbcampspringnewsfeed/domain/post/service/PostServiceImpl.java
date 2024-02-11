@@ -57,4 +57,15 @@ public class PostServiceImpl implements PostService {
     List<Comment> commentList = commentService.getCommentsByPostId(postId);
     return PostResponseDto.from(post, member.getNickname(), commentList);
   }
+
+  @Override
+  public void deletePost(Long postId, Long memberId) {
+    Post post = postRepository.getPost(postId);
+    if (!post.getMemberId().equals(memberId)) {
+      throw new IllegalArgumentException("Member id not matching");
+    }
+    commentService.getCommentsByPostId(postId)
+        .forEach(comment -> commentService.deleteComment(comment.getCommentId()));
+    postRepository.deletePost(postId);
+  }
 }
