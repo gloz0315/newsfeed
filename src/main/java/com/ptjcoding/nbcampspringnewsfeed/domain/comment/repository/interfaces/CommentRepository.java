@@ -13,7 +13,7 @@ public interface CommentRepository {
 
   List<Comment> getCommentsByPostId(Long postId);
 
-  List<Comment> getCommentsByMemberIdAndPostId(Long memberId, Long postId);
+  List<Comment> getCommentsByMemberId(Long memberId);
 
   Comment updateComment(Long commentId, CommentUpdateDto dto);
 

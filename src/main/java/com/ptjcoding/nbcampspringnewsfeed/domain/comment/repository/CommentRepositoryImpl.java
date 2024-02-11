@@ -40,8 +40,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> getCommentsByMemberIdAndPostId(Long memberId, Long postId) {
-    return commentJpaRepository.findAllByMemberIdAndPostId(memberId, postId)
+  public List<Comment> getCommentsByMemberId(Long memberId) {
+    return commentJpaRepository.findAllByMemberId(memberId)
         .stream()
         .map(CommentEntity::toModel)
         .toList();
