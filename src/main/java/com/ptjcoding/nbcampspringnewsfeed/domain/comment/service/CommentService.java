@@ -20,4 +20,6 @@ public interface CommentService {
 
   void deleteComment(Member member, Long commentId);
 
+  void deleteCommentsByMemberId(Long memberId);
+
 }

@@ -67,4 +67,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     commentJpaRepository.delete(commentEntity);
   }
 
+  @Override
+  public void deleteCommentsByMemberId(Long memberId) {
+    commentJpaRepository.deleteAllByMemberId(memberId);
+  }
+
 }
