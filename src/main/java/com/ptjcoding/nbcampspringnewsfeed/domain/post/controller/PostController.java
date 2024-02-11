@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.controller;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,11 +28,11 @@ public class PostController {
 
   @PostMapping
   public ResponseEntity<CommonResponseDto<PostResponseDto>> createPost(
-      @Validated @RequestBody PostRequestDto postRequestDto
+      @Validated @RequestBody PostRequestDto postRequestDto,
+      @RequestAttribute("member") Member member
   ) {
 
-    Long memberId = postRequestDto.getMemberId(); // 테스트용 코드 이 후 토큰 검증으로 변경
-    Post post = postService.createPost(postRequestDto, memberId);
+    Post post = postService.createPost(postRequestDto, member.getId());
     return CommonResponseDto.ok("게시글 작성 성공", new PostResponseDto(post));
   }
 
