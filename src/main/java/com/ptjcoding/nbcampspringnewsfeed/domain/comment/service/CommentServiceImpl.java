@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentCreateDto;
@@ -8,6 +9,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentU
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.service.VoteService;
 import java.util.List;
@@ -21,13 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommentServiceImpl implements CommentService {
 
+  private final MemberService memberService;
   private final VoteService voteService;
   private final PostService postService;
 
   private final CommentRepository commentRepository;
 
   @Override
-  public Comment createComment(Member member, CommentCreateRequestDto requestDto) {
+  public CommentResponseDto createComment(Member member, CommentCreateRequestDto requestDto) {
     Long memberId = member.getId();
 
     postService.getPostByPostId(requestDto.getPostId());
@@ -40,34 +43,45 @@ public class CommentServiceImpl implements CommentService {
         .parentCommentId(requestDto.getParentCommentId())
         .build();
 
-    return commentRepository.createComment(createDto);
+    return CommentResponseDto.of(commentRepository.createComment(createDto), member);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Comment getCommentByCommentId(Long commentId) {
-    return commentRepository.getCommentByCommentId(commentId);
+  public CommentResponseDto getCommentByCommentId(Long commentId) {
+    Comment comment = commentRepository.getCommentByCommentId(commentId);
+    Member member = memberService.getMemberByMemberId(comment.getMemberId());
+
+    return CommentResponseDto.of(comment, member);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<Comment> getCommentsByPostId(Long postId) {
-    return commentRepository.getCommentsByPostId(postId);
+  public List<CommentResponseDto> getCommentsByPostId(Long postId) {
+    return commentRepository.getCommentsByPostId(postId)
+        .stream()
+        .map(comment -> CommentResponseDto.of(comment, memberService.getMemberByMemberId(comment.getMemberId())))
+        .toList();
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<Comment> getCommentsByMemberId(Long memberId) {
-    return commentRepository.getCommentsByMemberId(memberId);
+  public List<CommentResponseDto> getCommentsByMemberId(Long memberId) {
+    return commentRepository.getCommentsByMemberId(memberId)
+        .stream()
+        .map(comment -> CommentResponseDto.of(comment, memberService.getMemberByMemberId(comment.getMemberId())))
+        .toList();
   }
 
   @Override
-  public Comment updateComment(Member member, Long commentId, CommentUpdateRequestDto requestDto) {
+  public CommentResponseDto updateComment(
+      Member member, Long commentId, CommentUpdateRequestDto requestDto
+  ) {
     validateCommentAndMember(member, commentId);
 
     CommentUpdateDto updateDto = CommentUpdateDto.of(requestDto);
 
-    return commentRepository.updateComment(commentId, updateDto);
+    return CommentResponseDto.of(commentRepository.updateComment(commentId, updateDto), member);
   }
 
   @Override
