@@ -8,6 +8,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentU
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.service.VoteService;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
   private final VoteService voteService;
+  private final PostService postService;
 
   private final CommentRepository commentRepository;
 
@@ -28,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
   public Comment createComment(Member member, CommentCreateRequestDto requestDto) {
     Long memberId = member.getId();
 
+    postService.getPostByPostId(requestDto.getPostId());
     voteService.getVoteByMemberIdAndPostId(memberId, requestDto.getPostId());
 
     CommentCreateDto createDto = CommentCreateDto.builder()
@@ -54,8 +57,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<Comment> getCommentsByMemberIdAndPostId(Long memberId, Long postId) {
-    return commentRepository.getCommentsByMemberIdAndPostId(memberId, postId);
+  public List<Comment> getCommentsByMemberId(Long memberId) {
+    return commentRepository.getCommentsByMemberId(memberId);
   }
 
   @Override
@@ -64,14 +67,19 @@ public class CommentServiceImpl implements CommentService {
 
     CommentUpdateDto updateDto = CommentUpdateDto.of(requestDto);
 
-    return commentRepository.updatecomment(commentId, updateDto);
+    return commentRepository.updateComment(commentId, updateDto);
   }
 
   @Override
   public void deleteComment(Member member, Long commentId) {
     validateCommentAndMember(member, commentId);
 
-    commentRepository.deleteById(commentId);
+    commentRepository.deleteByCommentId(commentId);
+  }
+
+  @Override
+  public void deleteCommentsByMemberId(Long memberId) {
+    commentRepository.deleteCommentsByMemberId(memberId);
   }
 
   private void validateCommentAndMember(Member member, Long commentId) {
