@@ -1,5 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentCreateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentUpdateDto;
@@ -20,6 +22,14 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Comment createComment(CommentCreateDto createDto) {
     return commentJpaRepository.save(CommentEntity.of(createDto)).toModel();
+  }
+
+  @Override
+  public Comment getCommentByCommentId(Long commentId) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+
+    return commentEntity.toModel();
   }
 
   @Override

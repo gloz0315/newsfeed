@@ -9,6 +9,8 @@ public interface CommentRepository {
 
   Comment createComment(CommentCreateDto dto);
 
+  Comment getCommentByCommentId(Long commentId);
+
   List<Comment> getCommentsByPostId(Long postId);
 
   List<Comment> getCommentsByMemberIdAndPostId(Long memberId, Long postId);
@@ -16,5 +18,6 @@ public interface CommentRepository {
   Comment updatecomment(long id, CommentUpdateDto dto);
 
   void deleteById(long id);
+
 
 }
