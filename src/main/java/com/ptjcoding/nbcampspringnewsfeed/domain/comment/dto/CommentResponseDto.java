@@ -2,6 +2,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class CommentResponseDto {
 
   private final String content;
 
-  private final Long memberId;
+  private final String nickname;
 
   private final Long postId;
 
@@ -25,11 +26,11 @@ public class CommentResponseDto {
 
   private final LocalDateTime updatedDate;
 
-  public static CommentResponseDto of(Comment comment) {
+  public static CommentResponseDto of(Comment comment, Member member) {
     return CommentResponseDto.builder()
         .commentId(comment.getCommentId())
         .content(comment.getContent())
-        .memberId(comment.getMemberId())
+        .nickname(member.getNickname())
         .postId(comment.getPostId())
         .parentCommentId(comment.getParentCommentId())
         .createdDate(comment.getCreatedDate())

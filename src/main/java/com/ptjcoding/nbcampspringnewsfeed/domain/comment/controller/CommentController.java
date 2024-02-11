@@ -33,7 +33,7 @@ public class CommentController {
   ) {
     Comment responseDto = commentService.createComment(member, requestDto);
 
-    return CommonResponseDto.ok("댓글 생성 성공", CommentResponseDto.of(responseDto));
+    return CommonResponseDto.ok("댓글 생성 성공", CommentResponseDto.of(responseDto, member));
   }
 
   @PutMapping("/{commentId}")
@@ -44,7 +44,7 @@ public class CommentController {
   ) {
     Comment responseDto = commentService.updateComment(member, commentId, requestDto);
 
-    return CommonResponseDto.ok("댓글 수정 성공", CommentResponseDto.of(responseDto));
+    return CommonResponseDto.ok("댓글 수정 성공", CommentResponseDto.of(responseDto, member));
   }
 
   @DeleteMapping("/{commentId}")
