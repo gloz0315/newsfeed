@@ -14,4 +14,6 @@ public interface PostRepository {
   Post getPost(Long postId);
 
   Post findByIdOrElseThrow(Long postId);
+
+  Post updatePost(Long postId, PostRequestDto postRequestDto);
 }

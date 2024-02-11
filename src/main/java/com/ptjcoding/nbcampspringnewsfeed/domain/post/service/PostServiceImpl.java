@@ -45,4 +45,16 @@ public class PostServiceImpl implements PostService {
     List<Comment> commentList = commentService.getCommentsByPostId(postId);
     return PostResponseDto.from(post, member.getNickname(), commentList);
   }
+
+  @Override
+  public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId) {
+    Post post = postRepository.getPost(postId);
+    if (!post.getMemberId().equals(memberId)) {
+      throw new IllegalArgumentException("Member id not matching");
+    }
+    post = postRepository.updatePost(postId, postRequestDto);
+    Member member = memberService.getMemberByMemberId(post.getMemberId());
+    List<Comment> commentList = commentService.getCommentsByPostId(postId);
+    return PostResponseDto.from(post, member.getNickname(), commentList);
+  }
 }

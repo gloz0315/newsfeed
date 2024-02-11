@@ -38,4 +38,14 @@ public class PostRepositoryImpl implements PostRepository {
         () -> new EntityNotFoundException(postId + "번 게시글은 없습니다.")
     ).toModel();
   }
+
+  @Override
+  public Post updatePost(Long postId, PostRequestDto postRequestDto) {
+    PostEntity postEntity = postJpaRepository.findById(postId).orElseThrow(
+        () -> new EntityNotFoundException(postId + "번 게시글은 없습니다.")
+    );
+    postEntity.setTitle(postRequestDto.getTitle());
+    postEntity.setContent(postRequestDto.getContent());
+    return postEntity.toModel();
+  }
 }
