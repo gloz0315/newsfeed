@@ -1,15 +1,18 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class VoteResponseDto {
 
   private final Long voteId;
+
+  private final String nickname;
 
   private final Long postId;
 
@@ -17,8 +20,14 @@ public class VoteResponseDto {
 
   private final LocalDateTime votedDate;
 
-  public static VoteResponseDto of(Vote vote) {
-    return new VoteResponseDto(vote.getVoteId(), vote.getPostId(), vote.getIsAgree(), vote.getVotedDate());
+  public static VoteResponseDto of(Vote vote, Member member) {
+    return VoteResponseDto.builder()
+        .voteId(vote.getVoteId())
+        .nickname(member.getNickname())
+        .postId(member.getId())
+        .isAgree(vote.getIsAgree())
+        .votedDate(vote.getVotedDate())
+        .build();
   }
 
 }
