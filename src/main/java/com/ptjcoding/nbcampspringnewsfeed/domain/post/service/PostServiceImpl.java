@@ -67,8 +67,7 @@ public class PostServiceImpl implements PostService {
     if (!post.getMemberId().equals(memberId)) {
       throw new IllegalArgumentException("Member id not matching");
     }
-    commentService.getCommentsByPostId(postId)
-        .forEach(comment -> commentService.deleteComment(comment.getCommentId()));
+    commentService.deleteCommentsByPostId(postId);
     postRepository.deletePost(postId);
   }
 
