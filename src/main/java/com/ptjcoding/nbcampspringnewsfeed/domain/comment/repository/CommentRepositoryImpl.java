@@ -23,15 +23,35 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> getCommentsByPostId(Long postId) {
-    List<CommentEntity> commentEntities = commentJpaRepository.findAllByPostId(postId);
-    return commentEntities.stream().map(CommentEntity::toModel).toList();
+  public Comment getCommentByCommentId(Long commentId) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
+
+    return commentEntity.toModel();
   }
 
   @Override
-  public Comment updatecomment(long id, CommentUpdateDto updateDto) {
-    CommentEntity commentEntity = commentJpaRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+  public List<Comment> getCommentsByPostId(Long postId) {
+    return commentJpaRepository.findAllByPostId(postId)
+        .stream()
+        .map(CommentEntity::toModel)
+        .toList();
+  }
+
+  @Override
+  public List<Comment> getCommentsByMemberId(Long memberId) {
+    return commentJpaRepository.findAllByMemberId(memberId)
+        .stream()
+        .map(CommentEntity::toModel)
+        .toList();
+  }
+
+  @Override
+  public Comment updateComment(Long commentId, CommentUpdateDto updateDto) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
 
     commentEntity.update(updateDto);
 
@@ -39,11 +59,17 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public void deleteById(long id) {
-    CommentEntity commentEntity = commentJpaRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+  public void deleteByCommentId(Long commentId) {
+    CommentEntity commentEntity = commentJpaRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Comment with id " + commentId + " not found"));
 
     commentJpaRepository.delete(commentEntity);
+  }
+
+  @Override
+  public void deleteCommentsByMemberId(Long memberId) {
+    commentJpaRepository.deleteAllByMemberId(memberId);
   }
 
 }

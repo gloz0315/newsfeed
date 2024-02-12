@@ -6,7 +6,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteCreateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteUpdateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +27,8 @@ public class VoteServiceImpl implements VoteService {
   }
 
   @Override
-  public Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId) {
-    return voteRepository.getVoteByMemberIdAndPostId(memberId, postId);
+  public Vote getVoteByMemberIdAndPostId(Long memberId, Long postId) {
+    return voteRepository.getVoteByMemberIdAndPostIdOrElseThrow(memberId, postId);
   }
 
   @Override
