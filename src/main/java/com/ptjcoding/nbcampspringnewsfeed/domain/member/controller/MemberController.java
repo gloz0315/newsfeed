@@ -4,6 +4,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +59,12 @@ public class MemberController {
     memberService.delete(memberId);
 
     return CommonResponseDto.ok("성공적으로 회원 탈퇴하셨습니다.", null);
+  }
+
+  @GetMapping("/{memberId}")
+  public ResponseEntity<CommonResponseDto<MemberInfoDto>> memberInfo(
+      @PathVariable("memberId") Long memberId
+  ) {
+    return CommonResponseDto.ok("정보를 조회합니다.", memberService.memberInfo(memberId));
   }
 }
