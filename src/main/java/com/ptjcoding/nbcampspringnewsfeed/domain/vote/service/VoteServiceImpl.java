@@ -2,6 +2,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.vote.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VoteServiceImpl implements VoteService {
 
   private final PostService postService;
+  private final MemberService memberService;
 
   private final VoteRepository voteRepository;
 
@@ -39,7 +41,8 @@ public class VoteServiceImpl implements VoteService {
 
     VoteCreateDto createDto = VoteCreateDto.of(memberId, requestDto);
 
-    return VoteResponseDto.of(voteRepository.createVote(createDto), member);
+    String memberNickname = memberService.getMemberByMemberId(memberId).getNickname();
+    return VoteResponseDto.of(voteRepository.createVote(createDto), memberNickname);
   }
 
   @Override
@@ -71,7 +74,8 @@ public class VoteServiceImpl implements VoteService {
 
     VoteUpdateDto updateDto = VoteUpdateDto.of(requestDto);
 
-    return VoteResponseDto.of(voteRepository.updateVote(voteId, updateDto), member);
+    String memberNickname = memberService.getMemberByMemberId(member.getId()).getNickname();
+    return VoteResponseDto.of(voteRepository.updateVote(voteId, updateDto), memberNickname);
   }
 
   @Override
