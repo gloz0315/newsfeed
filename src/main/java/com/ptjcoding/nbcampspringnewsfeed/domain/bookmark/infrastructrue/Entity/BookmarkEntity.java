@@ -39,7 +39,7 @@ public class BookmarkEntity {
   @CreatedDate
   private LocalDateTime markedDate;
 
-  public static BookmarkEntity of(Long memberId, Long postId) {
+  public static BookmarkEntity of(Long postId, Long memberId) {
     return BookmarkEntity
         .builder()
         .memberId(memberId)
