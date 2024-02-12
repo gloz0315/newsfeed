@@ -1,22 +1,26 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentCreateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import java.util.List;
 
 public interface CommentService {
 
-  Comment createComment(Member member, CommentCreateRequestDto requestDto);
+  CommentResponseDto createComment(Member member, CommentCreateRequestDto requestDto);
 
-  Comment getCommentByCommentId(Long commentId);
+  CommentResponseDto getCommentByCommentId(Long commentId);
 
-  List<Comment> getCommentsByPostId(Long postId);
+  List<CommentResponseDto> getCommentsByPostId(Long postId);
 
-  List<Comment> getCommentsByMemberId(Long memberId);
+  List<CommentResponseDto> getCommentsByMemberId(Long memberId);
 
-  Comment updateComment(Member member, Long commentId, CommentUpdateRequestDto requestDto);
+  CommentResponseDto updateComment(
+      Member member,
+      Long commentId,
+      CommentUpdateRequestDto requestDto
+  );
 
   void deleteComment(Member member, Long commentId);
 

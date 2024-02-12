@@ -1,17 +1,25 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.service;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
+import java.util.List;
+import java.util.Optional;
 
 public interface VoteService {
 
-  Vote createVote(VoteCreateRequestDto requestDto);
+  VoteResponseDto createVote(Member member, VoteCreateRequestDto requestDto);
 
-  Vote getVoteByMemberIdAndPostId(Long memberId, Long postId);
+  Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId);
 
-  Vote updateVote(Long voteId, VoteUpdateRequestDto requestDto);
+  Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId);
 
-  void deleteVote(Long voteId);
+  List<Vote> getVotesByPostId(Long postId);
+
+  VoteResponseDto updateVote(Member member, Long voteId, VoteUpdateRequestDto requestDto);
+
+  void deleteVote(Member member, Long voteId);
 
 }

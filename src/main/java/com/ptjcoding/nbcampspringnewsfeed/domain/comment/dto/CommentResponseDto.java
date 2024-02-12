@@ -18,8 +18,6 @@ public class CommentResponseDto {
 
   private final String nickname;
 
-  private final Long postId;
-
   private final Long parentCommentId;
 
   private final LocalDateTime createdDate;
@@ -31,7 +29,6 @@ public class CommentResponseDto {
         .commentId(comment.getCommentId())
         .content(comment.getContent())
         .nickname(member.getNickname())
-        .postId(comment.getPostId())
         .parentCommentId(comment.getParentCommentId())
         .createdDate(comment.getCreatedDate())
         .updatedDate(comment.getUpdatedDate())

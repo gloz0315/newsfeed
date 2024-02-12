@@ -1,6 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.model;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.common.entity.Timestamped;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment extends Timestamped {
+public class Comment {
 
   private Long commentId;
 
@@ -21,6 +21,10 @@ public class Comment extends Timestamped {
   private Long postId;
 
   private Long parentCommentId;
+
+  private LocalDateTime createdDate;
+
+  private LocalDateTime updatedDate;
 
 }
 
