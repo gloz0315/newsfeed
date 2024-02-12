@@ -23,13 +23,19 @@ public class VoteRepositoryImpl implements VoteRepository {
     return voteJpaRepository.save(VoteEntity.of(createDto)).toModel();
   }
 
-  public Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId) {
+  public Optional<Vote> findVoteByMemberIdAndPostId(Long memberId, Long postId) {
     return voteJpaRepository.findByMemberIdAndPostId(memberId, postId).map(VoteEntity::toModel);
   }
 
+  public Vote findVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
+    return findVoteByMemberIdAndPostId(memberId, postId).orElseThrow(
+        () -> new EntityNotFoundException("Vote not found")
+    );
+  }
+
   @Override
-  public List<Vote> getVotesByPostId(Long postId) {
-    return voteJpaRepository.findAllByPostId(postId);
+  public List<Vote> findVotesByPostId(Long postId) {
+    return voteJpaRepository.findAllByPostId(postId).stream().map(VoteEntity::toModel).toList();
   }
 
   @Override
@@ -43,11 +49,25 @@ public class VoteRepositoryImpl implements VoteRepository {
   }
 
   @Override
-  public void deleteVoteById(Long id) {
+  public void deleteVote(Long id) {
     VoteEntity voteEntity = voteJpaRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Vote with id " + id + " not found"));
 
     voteJpaRepository.delete(voteEntity);
+  }
+
+  @Override
+  public void deleteVotesByPostId(Long postId) {
+    List<VoteEntity> voteEntities = voteJpaRepository.findAllByPostId(postId);
+
+    voteJpaRepository.deleteAll(voteEntities);
+  }
+
+  @Override
+  public void deleteVotesByMemberId(Long memberId) {
+    List<VoteEntity> voteEntities = voteJpaRepository.findAllByMemberId(memberId);
+
+    voteJpaRepository.deleteAll(voteEntities);
   }
 
 }

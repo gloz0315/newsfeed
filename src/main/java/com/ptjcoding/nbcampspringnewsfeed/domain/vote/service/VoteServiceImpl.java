@@ -2,8 +2,8 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.vote.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
-import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteUpdateRequestDto;
@@ -25,15 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class VoteServiceImpl implements VoteService {
 
-  private final PostService postService;
-  private final MemberService memberService;
-
   private final VoteRepository voteRepository;
+  private final PostRepository postRepository;
+  private final MemberRepository memberRepository;
 
   @Override
   public VoteResponseDto createVote(Member member, VoteCreateRequestDto requestDto) {
     Long memberId = member.getId();
-    Optional<Vote> vote = voteRepository.getVoteByMemberIdAndPostId(memberId, requestDto.getPostId());
+    Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId,
+        requestDto.getPostId());
 
     if (vote.isPresent()) {
       throw new RuntimeException("투표가 이미 존재함");
@@ -41,13 +41,13 @@ public class VoteServiceImpl implements VoteService {
 
     VoteCreateDto createDto = VoteCreateDto.of(memberId, requestDto);
 
-    String memberNickname = memberService.getMemberByMemberId(memberId).getNickname();
+    String memberNickname = memberRepository.findMemberOrElseThrow(memberId).getNickname();
     return VoteResponseDto.of(voteRepository.createVote(createDto), memberNickname);
   }
 
   @Override
   public Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId) {
-    return voteRepository.getVoteByMemberIdAndPostId(memberId, postId);
+    return voteRepository.findVoteByMemberIdAndPostId(memberId, postId);
   }
 
   @Override
@@ -63,9 +63,9 @@ public class VoteServiceImpl implements VoteService {
 
   @Override
   public List<Vote> getVotesByPostId(Long postId) {
-    postService.getPostByPostId(postId);
+    postRepository.findPostOrElseThrow(postId);
 
-    return voteRepository.getVotesByPostId(postId);
+    return voteRepository.findVotesByPostId(postId);
   }
 
   @Override
@@ -73,8 +73,8 @@ public class VoteServiceImpl implements VoteService {
     validateVoteAndMember(member, voteId);
 
     VoteUpdateDto updateDto = VoteUpdateDto.of(requestDto);
+    String memberNickname = memberRepository.findMemberOrElseThrow(member.getId()).getNickname();
 
-    String memberNickname = memberService.getMemberByMemberId(member.getId()).getNickname();
     return VoteResponseDto.of(voteRepository.updateVote(voteId, updateDto), memberNickname);
   }
 
@@ -82,7 +82,7 @@ public class VoteServiceImpl implements VoteService {
   public void deleteVote(Member member, Long voteId) {
     validateVoteAndMember(member, voteId);
 
-    voteRepository.deleteVoteById(voteId);
+    voteRepository.deleteVote(voteId);
   }
 
   private void validateVoteAndMember(Member member, Long postId) {

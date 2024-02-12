@@ -12,12 +12,18 @@ public interface VoteRepository {
 
   Vote createVote(VoteCreateDto createDto);
 
-  Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId);
+  Optional<Vote> findVoteByMemberIdAndPostId(Long memberId, Long postId);
 
-  List<Vote> getVotesByPostId(Long postId);
+  Vote findVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId);
+
+  List<Vote> findVotesByPostId(Long postId);
 
   Vote updateVote(Long voteId, VoteUpdateDto updateDto);
 
-  void deleteVoteById(Long id);
+  void deleteVote(Long voteId);
+
+  void deleteVotesByPostId(Long postId);
+
+  void deleteVotesByMemberId(Long memberId);
 
 }

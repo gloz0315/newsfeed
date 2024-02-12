@@ -60,7 +60,7 @@ public class PostController {
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<CommonResponseDto<PostResponseDto>> updatePost
+  public ResponseEntity<CommonResponseDto<PostResponseDto>> deletePost
       (
           @PathVariable Long postId,
           @RequestAttribute("member") Member member

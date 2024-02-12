@@ -1,5 +1,9 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository;
 
-public class BookmarkRepositoryImpl {
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BookmarkRepositoryImpl implements BookmarkRepository {
 
 }

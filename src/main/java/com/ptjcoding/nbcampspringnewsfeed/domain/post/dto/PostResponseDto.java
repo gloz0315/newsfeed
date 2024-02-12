@@ -24,8 +24,9 @@ public class PostResponseDto {
   private final LocalDateTime updatedDate;
   private final LocalDateTime deletedDate;
 
-  public static PostResponseDto from(Post post, String nickname, List<Comment> commentList) {
-    return PostResponseDto.builder()
+  public static PostResponseDto fromPost(Post post, String nickname) {
+    return PostResponseDto
+        .builder()
         .postId(post.getPostId())
         .nickname(nickname)
         .title(post.getTitle())
@@ -35,7 +36,25 @@ public class PostResponseDto {
         .createdDate(post.getCreatedDate())
         .updatedDate(post.getUpdatedDate())
         .deletedDate(post.getDeletedDate())
+        .build();
+  }
+
+  public static PostResponseDto fromPostDetail(
+      Post post,
+      String nickname,
+      List<Comment> commentList
+  ) {
+    return PostResponseDto.builder()
+        .postId(post.getPostId())
+        .nickname(nickname)
+        .title(post.getTitle())
+        .content(post.getContent())
         .commentList(commentList)
+        .agreeCount(post.getAgreeCount())
+        .disagreeCount(post.getDisagreeCount())
+        .createdDate(post.getCreatedDate())
+        .updatedDate(post.getUpdatedDate())
+        .deletedDate(post.getDeletedDate())
         .build();
   }
 }

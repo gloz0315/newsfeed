@@ -1,14 +1,17 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,77 +20,63 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class PostServiceImpl implements PostService {
+
+  private final MemberRepository memberRepository;
   private final PostRepository postRepository;
-  private final MemberService memberService;
-  private final CommentService commentService;
+  private final CommentRepository commentRepository;
+  private final VoteRepository voteRepository;
+  private final BookmarkRepository bookmarkRepository;
 
   @Override
   public PostResponseDto createPost(PostRequestDto postRequestDto, Long memberId) {
-    Member member = memberService.getMemberByMemberId(memberId);
+    Member member = memberRepository.findMemberOrElseThrow(memberId);
     Post post = postRepository.createPost(postRequestDto, member);
-    return PostResponseDto.from(post, member.getNickname(), null);
+    return PostResponseDto.fromPost(post, member.getNickname());
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<PostResponseDto> getPosts() {
-    return postRepository.getPosts()
+    return postRepository.findPosts()
         .stream()
         .map(post -> {
-          Member member = memberService.getMemberByMemberId(post.getMemberId());
-          List<Comment> commentList = commentService.getCommentsByPostId(post.getPostId());
-          return PostResponseDto.from(post, member.getNickname(), commentList);
-        }).toList();
+          Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
+          return PostResponseDto.fromPost(post, member.getNickname());
+        })
+        .toList();
   }
 
   @Override
   @Transactional(readOnly = true)
   public PostResponseDto getPost(Long postId) {
-    Post post = postRepository.getPost(postId);
-    Member member = memberService.getMemberByMemberId(post.getMemberId());
-    List<Comment> commentList = commentService.getCommentsByPostId(postId);
-    return PostResponseDto.from(post, member.getNickname(), commentList);
+    Post post = postRepository.findPostOrElseThrow(postId);
+    Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
+    List<Comment> commentList = commentRepository.findCommentsByPostId(post.getPostId());
+    return PostResponseDto.fromPostDetail(post, member.getNickname(), commentList);
   }
 
   @Override
   public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId) {
-    Post post = postRepository.getPost(postId);
-    if (!post.getMemberId().equals(memberId)) {
-      throw new IllegalArgumentException("Member id not matching");
-    }
-    post = postRepository.updatePost(postId, postRequestDto);
-    Member member = memberService.getMemberByMemberId(post.getMemberId());
-    List<Comment> commentList = commentService.getCommentsByPostId(postId);
-    return PostResponseDto.from(post, member.getNickname(), commentList);
+    Post post = postRepository.findPostOrElseThrow(postId);
+    validateMemberId(post.getMemberId(), memberId);
+    Post updatePost = postRepository.updatePost(postId, postRequestDto);
+    Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
+    List<Comment> commentList = commentRepository.findCommentsByPostId(postId);
+    return PostResponseDto.fromPostDetail(updatePost, member.getNickname(), commentList);
   }
 
   @Override
   public void deletePost(Long postId, Long memberId) {
-    Post post = postRepository.getPost(postId);
-    if (!post.getMemberId().equals(memberId)) {
-      throw new IllegalArgumentException("Member id not matching");
-    }
-    commentService.getCommentsByPostId(postId)
-        .forEach(comment -> commentService.deleteComment(comment.getCommentId()));
+    Post post = postRepository.findPostOrElseThrow(postId);
+    validateMemberId(post.getMemberId(), memberId);
+    voteRepository.deleteVotesByPostId(postId);
+    commentRepository.deleteCommentsByPostId(postId);
     postRepository.deletePost(postId);
   }
 
-  @Override
-  public Post getPostByPostId(Long postId) {
-    return postRepository.getPostByPostId(postId);
+  private void validateMemberId(Long memberIdOfPost, Long memberId) {
+    if (!Objects.equals(memberIdOfPost, memberId)) {
+      throw new IllegalArgumentException("Member id not matching");
+    }
   }
-
-  @Override
-  @Transactional(readOnly = true)
-  public List<Post> getPostsByMemberId(Long memberId) {
-    Member member = memberService.getMemberByMemberId(memberId);
-    return postRepository.getPostsByMemberId(member.getId());
-  }
-
-  @Override
-  public void deletePostsByMemberId(Long memberId) {
-    Member member = memberService.getMemberByMemberId(memberId);
-    postRepository.deletePostsByMemberId(member.getId());
-  }
-
 }

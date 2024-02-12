@@ -9,9 +9,9 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentU
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
-import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
-import com.ptjcoding.nbcampspringnewsfeed.domain.vote.service.VoteService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommentServiceImpl implements CommentService {
 
-  private final MemberService memberService;
-  private final VoteService voteService;
-  private final PostService postService;
+  private final MemberRepository memberRepository;
+  private final VoteRepository voteRepository;
+  private final PostRepository postRepository;
 
   private final CommentRepository commentRepository;
 
@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
   public CommentResponseDto createComment(Member member, CommentCreateRequestDto requestDto) {
     Long memberId = member.getId();
 
-    postService.getPostByPostId(requestDto.getPostId());
-    voteService.getVoteByMemberIdAndPostId(memberId, requestDto.getPostId());
+    postRepository.findPostOrElseThrow(requestDto.getPostId());
+    voteRepository.findVoteByMemberIdAndPostIdOrElseThrow(memberId, requestDto.getPostId());
 
     CommentCreateDto createDto = CommentCreateDto.builder()
         .content(requestDto.getContent())
@@ -49,8 +49,8 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public CommentResponseDto getCommentByCommentId(Long commentId) {
-    Comment comment = commentRepository.getCommentByCommentId(commentId);
-    Member member = memberService.getMemberByMemberId(comment.getMemberId());
+    Comment comment = commentRepository.findCommentOrElseThrow(commentId);
+    Member member = memberRepository.findMemberOrElseThrow(comment.getMemberId());
 
     return CommentResponseDto.of(comment, member);
   }
@@ -58,18 +58,20 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional(readOnly = true)
   public List<CommentResponseDto> getCommentsByPostId(Long postId) {
-    return commentRepository.getCommentsByPostId(postId)
+    return commentRepository.findCommentsByPostId(postId)
         .stream()
-        .map(comment -> CommentResponseDto.of(comment, memberService.getMemberByMemberId(comment.getMemberId())))
+        .map(comment -> CommentResponseDto.of(comment,
+            memberRepository.findMemberOrElseThrow(comment.getMemberId())))
         .toList();
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<CommentResponseDto> getCommentsByMemberId(Long memberId) {
-    return commentRepository.getCommentsByMemberId(memberId)
+    return commentRepository.findCommentsByMemberId(memberId)
         .stream()
-        .map(comment -> CommentResponseDto.of(comment, memberService.getMemberByMemberId(comment.getMemberId())))
+        .map(comment -> CommentResponseDto.of(comment,
+            memberRepository.findMemberOrElseThrow(comment.getMemberId())))
         .toList();
   }
 
@@ -88,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
   public void deleteComment(Member member, Long commentId) {
     validateCommentAndMember(member, commentId);
 
-    commentRepository.deleteByCommentId(commentId);
+    commentRepository.deleteComment(commentId);
   }
 
   @Override
@@ -102,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   private void validateCommentAndMember(Member member, Long commentId) {
-    Comment comment = commentRepository.getCommentByCommentId(commentId);
+    Comment comment = commentRepository.findCommentOrElseThrow(commentId);
 
     boolean isIllegalRequest = !Objects.equals(comment.getMemberId(), member.getId())
                                && member.getRole() == MemberRole.USER;

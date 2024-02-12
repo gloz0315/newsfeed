@@ -2,7 +2,6 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.service;
 
 import static com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole.USER;
 
-import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository.BlackListRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
@@ -16,16 +15,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
   // TODO: 댓글과 작성글에 대한 정보를 가져오기 위해 남김
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
-  private final BlackListRepository blackListRepository;
   private final JwtProvider jwtProvider;
 
   @Override
@@ -44,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public void login(LoginRequestDto dto, HttpServletResponse response) {
     Member member = memberRepository.checkPassword(dto);
 
@@ -55,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public void logout(HttpServletRequest request) {
     jwtProvider.expireToken(request);
   }
@@ -63,10 +65,5 @@ public class MemberServiceImpl implements MemberService {
   public void delete(Long memberId) {
     // TODO: 회원의 작성글과 댓글 삭제
     memberRepository.deleteMember(memberId);
-  }
-
-  @Override
-  public Member getMemberByMemberId(Long memberId) {
-    return memberRepository.findByIdOrElseThrow(memberId);
   }
 }
