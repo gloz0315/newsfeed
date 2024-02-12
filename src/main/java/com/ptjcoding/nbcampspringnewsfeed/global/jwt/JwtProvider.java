@@ -1,26 +1,23 @@
 package com.ptjcoding.nbcampspringnewsfeed.global.jwt;
 
-import static com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.JwtErrorCode.INVALID_TOKEN_EXCEPTION;
-import static com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState.EXPIRED;
-import static com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState.INVALID;
-import static com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState.VALID;
-
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.CustomJwtException;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.repository.TokenRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -29,12 +26,9 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+
+import static com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.JwtErrorCode.INVALID_TOKEN_EXCEPTION;
+import static com.ptjcoding.nbcampspringnewsfeed.global.jwt.TokenState.*;
 
 
 @Slf4j
@@ -220,7 +214,7 @@ public class JwtProvider {
         }
 
         Long memberId = tokenRepository.findMemberIdByToken(refreshToken);
-      Member member = memberRepository.findMemberOrElseThrow(memberId);
+        Member member = memberRepository.findMemberOrElseThrow(memberId);
         return generateAccessToken(member.getId(), member.getRole().getAuthority());
     }
 
