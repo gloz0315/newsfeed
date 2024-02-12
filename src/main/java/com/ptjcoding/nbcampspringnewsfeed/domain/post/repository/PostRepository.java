@@ -22,4 +22,6 @@ public interface PostRepository {
   List<Post> getPostsByMemberId(Long memberId);
 
   void deletePostsByMemberId(Long memberId);
+
+  Post getPostByPostId(Long postId);
 }

@@ -69,4 +69,11 @@ public class PostRepositoryImpl implements PostRepository {
   public void deletePostsByMemberId(Long memberId) {
     postJpaRepository.deleteByMemberId(memberId);
   }
+
+  @Override
+  public Post getPostByPostId(Long postId) {
+    return postJpaRepository.findById(postId).orElseThrow(
+        () -> new EntityNotFoundException("Post with id " + postId + " not found")
+    ).toModel();
+  }
 }

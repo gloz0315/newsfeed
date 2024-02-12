@@ -17,6 +17,7 @@ public interface PostService {
 
   void deletePost(Long postId, Long memberId);
 
+  public Post getPostByPostId(Long postId);
   public List<Post> getPostsByMemberId(Long memberId);
 
   public void deletePostsByMemberId(Long memberId);

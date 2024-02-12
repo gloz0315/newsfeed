@@ -20,6 +20,7 @@ public class PostServiceImpl implements PostService {
   private final PostRepository postRepository;
   private final MemberService memberService;
   private final CommentService commentService;
+
   @Override
   public PostResponseDto createPost(PostRequestDto postRequestDto, Long memberId) {
     Member member = memberService.getMemberByMemberId(memberId);
@@ -72,6 +73,11 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  public Post getPostByPostId(Long postId) {
+    return postRepository.getPostByPostId(postId);
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public List<Post> getPostsByMemberId(Long memberId) {
     Member member = memberService.getMemberByMemberId(memberId);
@@ -83,4 +89,5 @@ public class PostServiceImpl implements PostService {
     Member member = memberService.getMemberByMemberId(memberId);
     postRepository.deletePostsByMemberId(member.getId());
   }
+
 }
