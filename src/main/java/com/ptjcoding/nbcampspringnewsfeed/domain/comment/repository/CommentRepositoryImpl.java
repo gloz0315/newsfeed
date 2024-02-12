@@ -68,6 +68,11 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
+  public void deleteCommentsByPostId(Long postId) {
+    commentJpaRepository.deleteAllByPostId(postId);
+  }
+
+  @Override
   public void deleteCommentsByMemberId(Long memberId) {
     commentJpaRepository.deleteAllByMemberId(memberId);
   }
