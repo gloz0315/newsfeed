@@ -89,7 +89,7 @@ public class PostEntity extends Timestamped {
         .agreeCount(agreeCount)
         .disagreeCount(disagreeCount)
         .createdDate(this.getCreatedDate())
-        .updatedDate(this.getUpdatedDate())
+        .updatedDate(this.getPostUpdatedDate())
         .deletedDate(this.getDeletedDate())
         .build();
   }
