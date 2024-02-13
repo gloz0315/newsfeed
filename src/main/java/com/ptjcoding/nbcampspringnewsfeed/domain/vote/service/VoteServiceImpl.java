@@ -55,18 +55,6 @@ public class VoteServiceImpl implements VoteService {
 
   @Override
   @Transactional(readOnly = true)
-  public Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
-    Optional<Vote> vote = getVoteByMemberIdAndPostId(memberId, postId);
-
-    if (vote.isEmpty()) {
-      throw new EntityNotFoundException("Vote not found");
-    }
-
-    return vote.get();
-  }
-
-  @Override
-  @Transactional(readOnly = true)
   public List<Vote> getVotesByPostId(Long postId) {
     postRepository.findPostOrElseThrow(postId);
 

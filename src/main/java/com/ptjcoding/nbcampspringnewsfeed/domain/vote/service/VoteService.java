@@ -14,8 +14,6 @@ public interface VoteService {
 
   Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId);
 
-  Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId);
-
   List<Vote> getVotesByPostId(Long postId);
 
   VoteResponseDto updateVote(Member member, Long voteId, VoteUpdateRequestDto requestDto);
