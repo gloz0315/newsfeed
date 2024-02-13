@@ -9,7 +9,7 @@ public interface BookmarkRepository {
 
   Bookmark createBookmark(Long postId, Long memberId);
 
-  List<Bookmark> getBookmarks(Long memberId);
+  List<Bookmark> findBookmarksByMemberId(Long memberId);
 
   void deleteBookmark(Long postId, Long memberId);
 
