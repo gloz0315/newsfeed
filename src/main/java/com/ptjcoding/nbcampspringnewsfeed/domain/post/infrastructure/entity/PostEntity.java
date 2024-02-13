@@ -1,5 +1,6 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.entity;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.common.entity.Timestamped;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import jakarta.persistence.Column;
@@ -14,11 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -30,31 +28,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @SQLDelete(sql = "update post set deleted_date = NOW() where post_id = ?")
 @SQLRestriction(value = "deleted_date is NULL")
 @EntityListeners(AuditingEntityListener.class)
-public class PostEntity {
+public class PostEntity extends Timestamped {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long postId;
   @Column(nullable = false)
   private Long memberId;
-  @Setter
   @Column(nullable = false, length = 40)
   private String title;
-  @Setter
   @Column(nullable = false, length = 500)
   private String content;
   @Column(nullable = false)
   private Long agreeCount;
   @Column(nullable = false)
   private Long disagreeCount;
-  @CreatedDate
-  @Column(name = "created_date")
-  private LocalDateTime createdDate;
-  @UpdateTimestamp
-  @Column(name = "updated_date")
-  private LocalDateTime updatedDate;
-  @Column(name = "deleted_date")
-  private LocalDateTime deletedDate;
+  @Column(name = "post_updated_date")
+  private LocalDateTime postUpdatedDate;
 
   public static PostEntity of(PostRequestDto postRequestDto, Long memberId) {
     return PostEntity
@@ -67,6 +57,28 @@ public class PostEntity {
         .build();
   }
 
+  public void update(PostRequestDto postRequestDto) {
+    this.title = postRequestDto.getTitle();
+    this.content = postRequestDto.getContent();
+    this.postUpdatedDate = LocalDateTime.now();
+  }
+
+  public void updateVote(boolean type, boolean isUp) {
+    if (type) {
+      if (isUp) {
+        ++agreeCount;
+      } else {
+        --agreeCount;
+      }
+    } else {
+      if (isUp) {
+        ++disagreeCount;
+      } else {
+        --disagreeCount;
+      }
+    }
+  }
+
   public Post toModel() {
     return Post
         .builder()
@@ -76,9 +88,9 @@ public class PostEntity {
         .content(content)
         .agreeCount(agreeCount)
         .disagreeCount(disagreeCount)
-        .createdDate(createdDate)
-        .updatedDate(updatedDate)
-        .deletedDate(deletedDate)
+        .createdDate(this.getCreatedDate())
+        .updatedDate(this.getUpdatedDate())
+        .deletedDate(this.getDeletedDate())
         .build();
   }
 }
