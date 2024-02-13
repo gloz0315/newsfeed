@@ -5,9 +5,9 @@ import com.ptjcoding.nbcampspringnewsfeed.global.exception.jwt.JwtErrorCode;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.infrastructure.jpa.RefreshTokenJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.infrastructure.jpa.entity.RefreshTokenEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class TokenRepositoryImpl implements TokenRepository {
     private final RefreshTokenJpaRepository refreshTokenJpaRepository;

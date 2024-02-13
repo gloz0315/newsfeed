@@ -16,7 +16,7 @@ public interface MemberService {
 
   void login(LoginRequestDto loginRequestDto, HttpServletResponse response);
 
-  void logout(HttpServletRequest request);
+  void logout(HttpServletRequest request, Member member);
 
   void delete(Long memberId);
 

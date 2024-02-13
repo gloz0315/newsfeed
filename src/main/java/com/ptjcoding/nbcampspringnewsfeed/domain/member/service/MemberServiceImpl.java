@@ -65,9 +65,9 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  @Transactional(readOnly = true)
-  public void logout(HttpServletRequest request) {
-    jwtProvider.expireToken(request);
+  @Transactional
+  public void logout(HttpServletRequest request, Member member) {
+    jwtProvider.expireToken(request, member.getId());
   }
 
   @Override
