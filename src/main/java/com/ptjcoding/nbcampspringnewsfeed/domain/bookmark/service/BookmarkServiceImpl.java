@@ -31,9 +31,9 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<BookmarkResponseDto> getBookmarks(Long memberId) {
+  public List<BookmarkResponseDto> getBookmarksByMemberId(Long memberId) {
     Member member = memberRepository.findMemberOrElseThrow(memberId);
-    return bookmarkRepository.getBookmarks(member.getId())
+    return bookmarkRepository.findBookmarksByMemberId(member.getId())
         .stream()
         .map(bookmark -> {
               Post post = postRepository.findPostOrElseThrow(bookmark.getPostId());

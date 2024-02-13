@@ -20,7 +20,7 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
   }
 
   @Override
-  public List<Bookmark> getBookmarks(Long memberId) {
+  public List<Bookmark> findBookmarksByMemberId(Long memberId) {
     return bookmarkJpaRepository.findAllByMemberId(memberId)
         .stream()
         .map(BookmarkEntity::toModel)

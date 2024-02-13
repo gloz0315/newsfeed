@@ -37,7 +37,7 @@ public class BookmarkController {
       @RequestAttribute("member") Member member
   ) {
     return CommonResponseDto.ok("북마크 조회 성공",
-        bookmarkService.getBookmarks(member.getId()));
+        bookmarkService.getBookmarksByMemberId(member.getId()));
   }
 
   @DeleteMapping("/deregister/posts/{postId}")

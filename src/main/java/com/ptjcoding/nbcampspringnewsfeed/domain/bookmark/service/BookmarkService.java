@@ -9,7 +9,7 @@ public interface BookmarkService {
 
   BookmarkResponseDto createBookmark(Long postId, Long memberId);
 
-  List<BookmarkResponseDto> getBookmarks(Long id);
+  List<BookmarkResponseDto> getBookmarksByMemberId(Long memberId);
 
   void deleteBookmark(Long postId, Long memberId);
 }
