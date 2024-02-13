@@ -1,5 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.service;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
@@ -27,13 +29,13 @@ public class VoteServiceImpl implements VoteService {
 
   private final VoteRepository voteRepository;
   private final PostRepository postRepository;
+  private final CommentRepository commentRepository;
   private final MemberRepository memberRepository;
 
   @Override
   public VoteResponseDto createVote(Member member, VoteCreateRequestDto requestDto) {
     Long memberId = member.getId();
-    Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId,
-        requestDto.getPostId());
+    Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId, requestDto.getPostId());
 
     if (vote.isPresent()) {
       throw new RuntimeException("투표가 이미 존재함");
@@ -46,22 +48,13 @@ public class VoteServiceImpl implements VoteService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Optional<Vote> getVoteByMemberIdAndPostId(Long memberId, Long postId) {
     return voteRepository.findVoteByMemberIdAndPostId(memberId, postId);
   }
 
   @Override
-  public Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
-    Optional<Vote> vote = getVoteByMemberIdAndPostId(memberId, postId);
-
-    if (vote.isEmpty()) {
-      throw new EntityNotFoundException("Vote not found");
-    }
-
-    return vote.get();
-  }
-
-  @Override
+  @Transactional(readOnly = true)
   public List<Vote> getVotesByPostId(Long postId) {
     postRepository.findPostOrElseThrow(postId);
 
@@ -78,10 +71,20 @@ public class VoteServiceImpl implements VoteService {
     return VoteResponseDto.of(voteRepository.updateVote(voteId, updateDto), memberNickname);
   }
 
-  @Override
-  public void deleteVote(Member member, Long voteId) {
-    validateVoteAndMember(member, voteId);
+  public void deleteVote(Member member, Long voteId, Boolean isSafe) {
+    Vote vote = voteRepository.findVoteOrElseThrow(voteId);
+    Long postId = vote.getPostId();
 
+    validateVoteAndMember(member, postId);
+
+    List<Comment> comments = commentRepository.findCommentsByMemberIdAndPostId(member.getId(), postId);
+
+    boolean isSafeDeletion = (isSafe != null) && isSafe && !comments.isEmpty();
+    if (isSafeDeletion) {
+      throw new RuntimeException("해당 게시글의 댓글을 먼저 삭제해주세요.");
+    }
+
+    commentRepository.deleteCommentsByMemberIdAndPostId(member.getId(), postId);
     voteRepository.deleteVote(voteId);
   }
 

@@ -14,6 +14,8 @@ public interface VoteRepository {
 
   Optional<Vote> findVoteByMemberIdAndPostId(Long memberId, Long postId);
 
+  Vote findVoteOrElseThrow(Long voteId);
+
   Vote findVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId);
 
   List<Vote> findVotesByPostId(Long postId);

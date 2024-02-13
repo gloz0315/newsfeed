@@ -48,6 +48,14 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
+  public List<Comment> findCommentsByMemberIdAndPostId(Long memberId, Long postId) {
+    return commentJpaRepository.findAllByMemberIdAndPostId(memberId, postId)
+        .stream()
+        .map(CommentEntity::toModel)
+        .toList();
+  }
+
+  @Override
   public Comment updateComment(Long commentId, CommentUpdateDto updateDto) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
         .orElseThrow(() -> new EntityNotFoundException(
@@ -75,6 +83,11 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public void deleteCommentsByMemberId(Long memberId) {
     commentJpaRepository.deleteAllByMemberId(memberId);
+  }
+
+  @Override
+  public void deleteCommentsByMemberIdAndPostId(Long memberId, Long postId) {
+    commentJpaRepository.deleteAll(commentJpaRepository.findAllByMemberIdAndPostId(memberId, postId));
   }
 
 }

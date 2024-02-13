@@ -23,14 +23,19 @@ public class VoteRepositoryImpl implements VoteRepository {
     return voteJpaRepository.save(VoteEntity.of(createDto)).toModel();
   }
 
+  @Override
+  public Vote findVoteOrElseThrow(Long voteId) {
+    return voteJpaRepository.findById(voteId)
+        .orElseThrow(() -> new EntityNotFoundException("Vote with id " + voteId + " not found"))
+        .toModel();
+  }
+
   public Optional<Vote> findVoteByMemberIdAndPostId(Long memberId, Long postId) {
     return voteJpaRepository.findByMemberIdAndPostId(memberId, postId).map(VoteEntity::toModel);
   }
 
   public Vote findVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
-    return findVoteByMemberIdAndPostId(memberId, postId).orElseThrow(
-        () -> new EntityNotFoundException("Vote not found")
-    );
+    return findVoteByMemberIdAndPostId(memberId, postId).orElseThrow(() -> new EntityNotFoundException("Vote not found"));
   }
 
   @Override

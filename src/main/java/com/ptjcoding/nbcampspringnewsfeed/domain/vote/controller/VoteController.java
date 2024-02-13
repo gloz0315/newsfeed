@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -49,9 +50,11 @@ public class VoteController {
 
   @DeleteMapping("/{voteId}")
   public ResponseEntity<CommonResponseDto<Void>> deleteVote(
-      @RequestAttribute("member") Member member, @PathVariable Long voteId
+      @RequestAttribute("member") Member member,
+      @PathVariable Long voteId,
+      @RequestParam(value = "safe", required = false) Boolean isSafe
   ) {
-    voteService.deleteVote(member, voteId);
+    voteService.deleteVote(member, voteId, isSafe);
 
     return CommonResponseDto.ok("투표 삭제 성공", null);
   }
