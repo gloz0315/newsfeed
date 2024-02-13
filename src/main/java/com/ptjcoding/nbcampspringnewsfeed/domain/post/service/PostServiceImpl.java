@@ -71,6 +71,7 @@ public class PostServiceImpl implements PostService {
     validateMemberId(post.getMemberId(), memberId);
     voteRepository.deleteVotesByPostId(postId);
     commentRepository.deleteCommentsByPostId(postId);
+    bookmarkRepository.deleteBookmarksByPostId(postId);
     postRepository.deletePost(postId);
   }
 
