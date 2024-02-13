@@ -16,11 +16,4 @@ public class Bookmark {
   private Long postId;
   private LocalDateTime markedDate;
 
-  public static Bookmark of(Long memberId, Long postId) {
-    return Bookmark
-        .builder()
-        .memberId(memberId)
-        .postId(postId)
-        .build();
-  }
 }
