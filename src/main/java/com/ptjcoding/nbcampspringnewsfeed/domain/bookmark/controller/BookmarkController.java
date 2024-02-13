@@ -41,7 +41,7 @@ public class BookmarkController {
   }
 
   @DeleteMapping("/deregister/posts/{postId}")
-  public ResponseEntity<CommonResponseDto<BookmarkResponseDto>> deleteBookmark(
+  public ResponseEntity<CommonResponseDto<Void>> deleteBookmark(
       @PathVariable Long postId, @RequestAttribute("member") Member member
   ) {
     bookmarkService.deleteBookmark(postId, member.getId());
