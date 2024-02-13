@@ -6,22 +6,15 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateReques
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,9 +42,10 @@ public class MemberController {
 
   @PostMapping("/logout")
   public ResponseEntity<CommonResponseDto<Void>> logout(
+          @RequestAttribute("member") Member member,
       HttpServletRequest request
   ) {
-    memberService.logout(request);
+    memberService.logout(request, member);
 
     return CommonResponseDto.ok("로그아웃 하였습니다.", null);
   }
