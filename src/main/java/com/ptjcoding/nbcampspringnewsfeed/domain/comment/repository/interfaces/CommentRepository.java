@@ -9,15 +9,15 @@ public interface CommentRepository {
 
   Comment createComment(CommentCreateDto dto);
 
-  Comment getCommentByCommentId(Long commentId);
+  Comment findCommentOrElseThrow(Long commentId);
 
-  List<Comment> getCommentsByPostId(Long postId);
+  List<Comment> findCommentsByPostId(Long postId);
 
-  List<Comment> getCommentsByMemberId(Long memberId);
+  List<Comment> findCommentsByMemberId(Long memberId);
 
   Comment updateComment(Long commentId, CommentUpdateDto dto);
 
-  void deleteByCommentId(Long commentId);
+  void deleteComment(Long commentId);
 
   void deleteCommentsByPostId(Long postId);
 

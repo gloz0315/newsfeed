@@ -23,7 +23,7 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> getPosts() {
+  public List<Post> findPosts() {
     return postJpaRepository.findAllByOrderByCreatedDateDesc()
         .stream()
         .map(PostEntity::toModel)
@@ -31,14 +31,9 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public Post getPost(Long postId) {
-    return findByIdOrElseThrow(postId);
-  }
-
-  @Override
-  public Post findByIdOrElseThrow(Long postId) {
+  public Post findPostOrElseThrow(Long postId) {
     return postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException("Post with id " + postId + " not found")
+        () -> new EntityNotFoundException(postId + "번 게시글은 존재하지 않습니다.")
     ).toModel();
   }
 
@@ -58,7 +53,7 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> getPostsByMemberId(Long memberId) {
+  public List<Post> findPostsByMemberId(Long memberId) {
     return postJpaRepository.findAllByMemberId(memberId)
         .stream()
         .map(PostEntity::toModel)
@@ -67,13 +62,6 @@ public class PostRepositoryImpl implements PostRepository {
 
   @Override
   public void deletePostsByMemberId(Long memberId) {
-    postJpaRepository.deleteByMemberId(memberId);
-  }
-
-  @Override
-  public Post getPostByPostId(Long postId) {
-    return postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException("Post with id " + postId + " not found")
-    ).toModel();
+    postJpaRepository.deleteAllByMemberId(memberId);
   }
 }

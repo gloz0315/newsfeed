@@ -62,7 +62,7 @@ public class VoteEntity {
   }
 
   public Vote toModel() {
-    return new Vote(voteId, postId, isAgree, votedDate);
+    return new Vote(voteId, postId, memberId, isAgree, votedDate);
   }
 
   public void update(VoteUpdateDto updateDto) {

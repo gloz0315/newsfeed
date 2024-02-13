@@ -10,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +19,6 @@ public class MemberRepositoryImpl implements MemberRepository {
   private final PasswordEncoder passwordEncoder;
 
   @Override
-  @Transactional
   public void register(MemberSignupDto dto) {
     memberJpaRepository.save(MemberEntity.of(
         dto.getEmail(),
@@ -44,7 +42,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   }
 
   @Override
-  public Member findByIdOrElseThrow(Long id) {
+  public Member findMemberOrElseThrow(Long id) {
     return memberJpaRepository.findById(id).orElseThrow(
         () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
     ).toModel();
@@ -58,7 +56,6 @@ public class MemberRepositoryImpl implements MemberRepository {
   }
 
   @Override
-  @Transactional
   public void deleteMember(Long id) {
     MemberEntity memberEntity = memberJpaRepository.findById(id).orElseThrow(
         () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")

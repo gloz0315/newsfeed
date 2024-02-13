@@ -12,6 +12,8 @@ public class Vote {
 
   private Long postId;
 
+  private Long memberId;
+
   private Boolean isAgree;
 
   private LocalDateTime votedDate;

@@ -23,7 +23,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public Comment getCommentByCommentId(Long commentId) {
+  public Comment findCommentOrElseThrow(Long commentId) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
         .orElseThrow(() -> new EntityNotFoundException(
             "Comment with id " + commentId + " not found"));
@@ -32,7 +32,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> getCommentsByPostId(Long postId) {
+  public List<Comment> findCommentsByPostId(Long postId) {
     return commentJpaRepository.findAllByPostId(postId)
         .stream()
         .map(CommentEntity::toModel)
@@ -40,7 +40,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> getCommentsByMemberId(Long memberId) {
+  public List<Comment> findCommentsByMemberId(Long memberId) {
     return commentJpaRepository.findAllByMemberId(memberId)
         .stream()
         .map(CommentEntity::toModel)
@@ -59,7 +59,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public void deleteByCommentId(Long commentId) {
+  public void deleteComment(Long commentId) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
         .orElseThrow(() -> new EntityNotFoundException(
             "Comment with id " + commentId + " not found"));

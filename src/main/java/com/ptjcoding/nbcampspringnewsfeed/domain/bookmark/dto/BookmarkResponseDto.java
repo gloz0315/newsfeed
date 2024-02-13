@@ -2,7 +2,9 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.dto;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.model.Bookmark;
 import java.time.LocalDateTime;
+import lombok.Getter;
 
+@Getter
 public class BookmarkResponseDto {
 
   private final Long bookmarkId;

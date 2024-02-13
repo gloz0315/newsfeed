@@ -134,7 +134,7 @@ public class JwtProvider {
                 .getBody();
 
         Long memberId = Long.parseLong(body.getSubject());
-        Member member = memberRepository.findByIdOrElseThrow(memberId);
+      Member member = memberRepository.findMemberOrElseThrow(memberId);
 
         request.setAttribute("member", member);
     }
@@ -214,7 +214,7 @@ public class JwtProvider {
         }
 
         Long memberId = tokenRepository.findMemberIdByToken(refreshToken);
-        Member member = memberRepository.findByIdOrElseThrow(memberId);
+        Member member = memberRepository.findMemberOrElseThrow(memberId);
         return generateAccessToken(member.getId(), member.getRole().getAuthority());
     }
 

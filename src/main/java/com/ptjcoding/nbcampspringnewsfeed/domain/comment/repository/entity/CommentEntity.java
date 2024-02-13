@@ -64,6 +64,8 @@ public class CommentEntity extends Timestamped {
         .memberId(this.memberId)
         .postId(this.postId)
         .parentCommentId(this.parentCommentId)
+        .createdDate(this.getCreatedDate())
+        .updatedDate(this.getUpdatedDate())
         .build();
   }
 

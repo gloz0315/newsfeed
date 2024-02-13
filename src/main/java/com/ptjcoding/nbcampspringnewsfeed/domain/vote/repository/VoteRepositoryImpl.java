@@ -7,6 +7,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.entity.VoteEnti
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,12 +23,19 @@ public class VoteRepositoryImpl implements VoteRepository {
     return voteJpaRepository.save(VoteEntity.of(createDto)).toModel();
   }
 
-  public Vote getVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
-    VoteEntity voteEntity = voteJpaRepository.findByMemberIdAndPostId(memberId, postId)
-        .orElseThrow(() -> new EntityNotFoundException(
-            "Vote by memberId" + memberId + "in postId" + postId + "not Found."));
+  public Optional<Vote> findVoteByMemberIdAndPostId(Long memberId, Long postId) {
+    return voteJpaRepository.findByMemberIdAndPostId(memberId, postId).map(VoteEntity::toModel);
+  }
 
-    return voteEntity.toModel();
+  public Vote findVoteByMemberIdAndPostIdOrElseThrow(Long memberId, Long postId) {
+    return findVoteByMemberIdAndPostId(memberId, postId).orElseThrow(
+        () -> new EntityNotFoundException("Vote not found")
+    );
+  }
+
+  @Override
+  public List<Vote> findVotesByPostId(Long postId) {
+    return voteJpaRepository.findAllByPostId(postId).stream().map(VoteEntity::toModel).toList();
   }
 
   @Override
@@ -40,11 +49,25 @@ public class VoteRepositoryImpl implements VoteRepository {
   }
 
   @Override
-  public void deleteVoteById(Long id) {
+  public void deleteVote(Long id) {
     VoteEntity voteEntity = voteJpaRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Vote with id " + id + " not found"));
 
     voteJpaRepository.delete(voteEntity);
+  }
+
+  @Override
+  public void deleteVotesByPostId(Long postId) {
+    List<VoteEntity> voteEntities = voteJpaRepository.findAllByPostId(postId);
+
+    voteJpaRepository.deleteAll(voteEntities);
+  }
+
+  @Override
+  public void deleteVotesByMemberId(Long memberId) {
+    List<VoteEntity> voteEntities = voteJpaRepository.findAllByMemberId(memberId);
+
+    voteJpaRepository.deleteAll(voteEntities);
   }
 
 }

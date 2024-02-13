@@ -9,19 +9,15 @@ public interface PostRepository {
 
   Post createPost(PostRequestDto postRequestDto, Member member);
 
-  List<Post> getPosts();
+  List<Post> findPosts();
 
-  Post getPost(Long postId);
-
-  Post findByIdOrElseThrow(Long postId);
+  Post findPostOrElseThrow(Long postId);
 
   Post updatePost(Long postId, PostRequestDto postRequestDto);
 
   void deletePost(Long postId);
 
-  List<Post> getPostsByMemberId(Long memberId);
+  List<Post> findPostsByMemberId(Long memberId);
 
   void deletePostsByMemberId(Long memberId);
-
-  Post getPostByPostId(Long postId);
 }
