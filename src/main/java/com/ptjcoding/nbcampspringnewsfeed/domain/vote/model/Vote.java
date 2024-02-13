@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,5 +18,13 @@ public class Vote {
   private Boolean isAgree;
 
   private LocalDateTime votedDate;
+
+  public boolean checkMemberIdEqual(Long memberId) {
+    return Objects.equals(this.memberId, memberId);
+  }
+
+  public boolean checkIsAgreeEqual(Boolean isAgree) {
+    return Objects.equals(this.isAgree, isAgree);
+  }
 
 }
