@@ -33,7 +33,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
   @Override
   public List<Comment> findCommentsByPostId(Long postId) {
-    return commentJpaRepository.findAllByPostId(postId)
+    return commentJpaRepository.findAllByPostIdOrderByCreatedDate(postId)
         .stream()
         .map(CommentEntity::toModel)
         .toList();
