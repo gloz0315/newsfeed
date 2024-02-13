@@ -3,6 +3,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.entity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.entity.Timestamped;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberUpdateDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,6 +45,10 @@ public class MemberEntity extends Timestamped {
   @Column(nullable = false, length = 10)
   @Enumerated(value = EnumType.STRING)
   private MemberRole role;
+
+  public void update(MemberUpdateDto dto) {
+    this.nickname = dto.getNickname();
+  }
 
   public static MemberEntity of(String email, String nickname, String password, MemberRole role) {
 
