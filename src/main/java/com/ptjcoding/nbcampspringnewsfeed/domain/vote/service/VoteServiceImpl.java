@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.C
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
@@ -35,7 +36,10 @@ public class VoteServiceImpl implements VoteService {
   @Override
   public VoteResponseDto createVote(Member member, VoteCreateRequestDto requestDto) {
     Long memberId = member.getId();
-    Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId, requestDto.getPostId());
+    Long postId = requestDto.getPostId();
+
+    postRepository.findPostOrElseThrow(postId);
+    Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId, postId);
 
     if (vote.isPresent()) {
       throw new RuntimeException("투표가 이미 존재함");
