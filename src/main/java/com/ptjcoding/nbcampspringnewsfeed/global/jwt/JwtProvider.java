@@ -134,7 +134,7 @@ public class JwtProvider {
                 .getBody();
 
         Long memberId = Long.parseLong(body.getSubject());
-      Member member = memberRepository.findMemberOrElseThrow(memberId);
+        Member member = memberRepository.findMemberOrElseThrow(memberId);
 
         request.setAttribute("member", member);
     }
@@ -218,7 +218,12 @@ public class JwtProvider {
         return generateAccessToken(member.getId(), member.getRole().getAuthority());
     }
 
-    public void expireToken(final HttpServletRequest request) {
+    @Transactional
+    public void expireToken(
+            final HttpServletRequest request,
+            final Long memberId
+    ) {
+        tokenRepository.deleteByMemberId(memberId);
         Cookie[] cookies = request.getCookies();
         Arrays.stream(cookies)
                 .filter(cookie ->
