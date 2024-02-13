@@ -65,15 +65,27 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public void updateAgreeCount(Long postId, boolean isUp) {
+  public void upAgreeCount(Long postId) {
     PostEntity postEntity = findPostEntityorElseThrow(postId);
-    postEntity.updateVote(true, isUp);
+    postEntity.upAgreeCount();
   }
 
   @Override
-  public void updateDisagreeCount(Long postId, boolean isUp) {
+  public void downAgreeCount(Long postId) {
     PostEntity postEntity = findPostEntityorElseThrow(postId);
-    postEntity.updateVote(false, isUp);
+    postEntity.downAgreeCount();
+  }
+
+  @Override
+  public void upDisagreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.upDisagreeCount();
+  }
+
+  @Override
+  public void downDisagreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.downDisagreeCount();
   }
 
   public PostEntity findPostEntityorElseThrow(Long postId) {

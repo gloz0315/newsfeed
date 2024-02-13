@@ -22,9 +22,13 @@ public interface PostRepository {
 
   void deletePostsByMemberId(Long memberId);
 
-  void updateAgreeCount(Long postId, boolean isUp);
+  void upAgreeCount(Long postId);
 
-  void updateDisagreeCount(Long postId, boolean isUp);
+  void downAgreeCount(Long postId);
+
+  void upDisagreeCount(Long postId);
+
+  void downDisagreeCount(Long postId);
 
   PostEntity findPostEntityorElseThrow(Long postId);
 }
