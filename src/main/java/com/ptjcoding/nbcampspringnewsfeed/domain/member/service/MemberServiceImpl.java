@@ -5,16 +5,17 @@ import static com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole.
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.hall_of_fame.repository.HallOfFameRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.NicknameUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
   private final CommentRepository commentRepository;
   private final VoteRepository voteRepository;
   private final BookmarkRepository bookmarkRepository;
+  private final HallOfFameRepository hallOfFameRepository;
   private final JwtProvider jwtProvider;
 
   @Override
@@ -72,10 +74,11 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public void delete(Long memberId) {
+    deleteHallOfFame(memberId);
     voteRepository.deleteVotesByMemberId(memberId);
     bookmarkRepository.deleteBookmarksByMemberId(memberId);
     commentRepository.deleteCommentsByMemberId(memberId);
-    postRepository.deletePostsByMemberId(memberId);
+    deletePosts(memberId);
     memberRepository.deleteMember(memberId);
   }
 
@@ -95,5 +98,27 @@ public class MemberServiceImpl implements MemberService {
     Member changeMember = memberRepository.updateMember(member.getId(),
         NicknameUpdateDto.of(dto));
     return NicknameChangeDto.of(member.getNickname(), changeMember.getNickname());
+  }
+
+  private void deleteHallOfFame(Long memberId) {
+    voteRepository.findVotesByMemberId(memberId).forEach(
+        vote -> {
+          Post post = postRepository.findPostOrElseThrow(vote.getPostId());
+          hallOfFameRepository.updateTable(vote.getPostId(), post.getVoteCount() - 1);
+        }
+    );
+
+    postRepository.findPostsByMemberId(memberId)
+        .forEach(post -> hallOfFameRepository.deleteHallOfFame(post.getPostId()));
+  }
+
+  private void deletePosts(Long memberId) {
+    postRepository.findPostsByMemberId(memberId)
+        .forEach(post -> {
+          voteRepository.deleteVotesByPostId(post.getPostId());
+          commentRepository.deleteCommentsByPostId(post.getPostId());
+        });
+
+    postRepository.deletePostsByMemberId(memberId);
   }
 }

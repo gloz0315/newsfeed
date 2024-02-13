@@ -75,4 +75,9 @@ public class VoteRepositoryImpl implements VoteRepository {
     voteJpaRepository.deleteAll(voteEntities);
   }
 
+  @Override
+  public List<Vote> findVotesByMemberId(Long memberId) {
+    return voteJpaRepository.findAllByMemberId(memberId).stream().map(VoteEntity::toModel).toList();
+  }
+
 }

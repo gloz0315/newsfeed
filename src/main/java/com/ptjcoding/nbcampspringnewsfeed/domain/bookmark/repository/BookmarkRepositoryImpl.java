@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.infrastructrue.Entity.
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.model.Bookmark;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,8 +22,10 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
   }
 
   @Override
-  public Bookmark findBookmarkByPostIdAndMemberId(Long postId, Long memberId) {
-    return bookmarkJpaRepository.findBookmarkEntityByPostIdAndMemberId(postId, memberId).toModel();
+  public Optional<Bookmark> findBookmarkByPostIdAndMemberId(Long postId, Long memberId) {
+    return bookmarkJpaRepository.findBookmarkEntityByPostIdAndMemberId(postId, memberId)
+        .map(BookmarkEntity::toModel);
+
   }
 
   @Override
@@ -35,8 +38,8 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
 
   @Override
   public void deleteBookmark(Long postId, Long memberId) {
-    Bookmark bookmark = findBookmarkByPostIdAndMemberId(postId, memberId);
-    if (bookmark == null) {
+    Optional<Bookmark> bookmark = findBookmarkByPostIdAndMemberId(postId, memberId);
+    if (bookmark.isEmpty()) {
       throw new EntityNotFoundException("Bookmark not found");
     }
     bookmarkJpaRepository.deleteByPostIdAndMemberId(postId, memberId);

@@ -3,6 +3,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.hall_of_fame.repository.HallOfFameRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
@@ -25,6 +26,7 @@ public class PostServiceImpl implements PostService {
   private final CommentRepository commentRepository;
   private final VoteRepository voteRepository;
   private final BookmarkRepository bookmarkRepository;
+  private final HallOfFameRepository hallOfFameRepository;
 
   @Override
   public PostResponseDto createPost(PostRequestDto postRequestDto, Long memberId) {
@@ -55,6 +57,17 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  public List<PostResponseDto> getHallOfFame() {
+    return hallOfFameRepository.getTop3PostIdList().stream()
+        .map(postId -> {
+          Post post = postRepository.findPostOrElseThrow(postId);
+          Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
+          return PostResponseDto.fromPost(post, member.getNickname());
+        })
+        .toList();
+  }
+
+  @Override
   public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
     if (post.isNotEqualsMemberId(memberId)) {
@@ -72,9 +85,11 @@ public class PostServiceImpl implements PostService {
     if (post.isNotEqualsMemberId(memberId)) {
       throw new IllegalArgumentException("Member id not matching");
     }
+
     voteRepository.deleteVotesByPostId(postId);
     commentRepository.deleteCommentsByPostId(postId);
     bookmarkRepository.deleteBookmarksByPostId(postId);
+    hallOfFameRepository.deleteHallOfFame(postId);
     postRepository.deletePost(postId);
   }
 }

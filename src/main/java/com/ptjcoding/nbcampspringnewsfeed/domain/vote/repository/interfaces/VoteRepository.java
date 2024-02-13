@@ -22,6 +22,8 @@ public interface VoteRepository {
 
   Vote updateVote(Long voteId, VoteUpdateDto updateDto);
 
+  List<Vote> findVotesByMemberId(Long memberId);
+
   void deleteVote(Long voteId);
 
   void deleteVotesByPostId(Long postId);

@@ -2,6 +2,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.model.Bookmark;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,7 +12,7 @@ public interface BookmarkRepository {
 
   List<Bookmark> findBookmarksByMemberId(Long memberId);
 
-  Bookmark findBookmarkByPostIdAndMemberId(Long postId, Long memberId);
+  Optional<Bookmark> findBookmarkByPostIdAndMemberId(Long postId, Long memberId);
 
   void deleteBookmark(Long postId, Long memberId);
 
