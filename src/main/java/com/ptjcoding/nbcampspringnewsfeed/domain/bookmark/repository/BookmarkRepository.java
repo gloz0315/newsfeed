@@ -11,7 +11,8 @@ public interface BookmarkRepository {
 
   List<Bookmark> findBookmarksByMemberId(Long memberId);
 
-  Bookmark findBookmarkByPostIdAndMemberIdOrElseThrow(Long postId, Long memberId);
+  Bookmark findBookmarkByPostIdAndMemberId(Long postId, Long memberId);
+
   void deleteBookmark(Long postId, Long memberId);
 
   void deleteBookmarksByPostId(Long postId);

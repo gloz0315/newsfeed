@@ -20,11 +20,8 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
   }
 
   @Override
-  public Bookmark findBookmarkByPostIdAndMemberIdOrElseThrow(Long postId, Long memberId) {
-    return bookmarkJpaRepository.findBookmarkEntityByPostIdAndMemberId(postId, memberId)
-        .orElseThrow(
-            () -> new IllegalArgumentException("이미 북마크에 등록된 게시글입니다.")
-        ).toModel();
+  public Bookmark findBookmarkByPostIdAndMemberId(Long postId, Long memberId) {
+    return bookmarkJpaRepository.findBookmarkEntityByPostIdAndMemberId(postId, memberId).toModel();
   }
 
   @Override

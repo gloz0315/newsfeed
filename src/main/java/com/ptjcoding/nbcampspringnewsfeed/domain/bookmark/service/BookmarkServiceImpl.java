@@ -25,8 +25,11 @@ public class BookmarkServiceImpl implements BookmarkService {
   public BookmarkResponseDto createBookmark(Long postId, Long memberId) {
     Member member = memberRepository.findMemberOrElseThrow(memberId);
     Post post = postRepository.findPostOrElseThrow(postId);
-    Bookmark bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberIdOrElseThrow(
+    Bookmark bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberId(
         post.getPostId(), member.getId());
+    if (bookmark != null) {
+      throw new IllegalArgumentException("Bookmark already exists");
+    }
     return BookmarkResponseDto.from(bookmarkRepository.createBookmark(postId, member.getId())
         , post.getTitle());
   }
