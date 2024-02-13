@@ -11,7 +11,6 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +57,9 @@ public class PostServiceImpl implements PostService {
   @Override
   public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
-    validateMemberId(post.getMemberId(), memberId);
+    if (post.isNotEqualsMemberId(memberId)) {
+      throw new IllegalArgumentException("Member id not matching");
+    }
     Post updatePost = postRepository.updatePost(postId, postRequestDto);
     Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
     List<Comment> commentList = commentRepository.findCommentsByPostId(postId);
@@ -68,16 +69,12 @@ public class PostServiceImpl implements PostService {
   @Override
   public void deletePost(Long postId, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
-    validateMemberId(post.getMemberId(), memberId);
+    if (post.isNotEqualsMemberId(memberId)) {
+      throw new IllegalArgumentException("Member id not matching");
+    }
     voteRepository.deleteVotesByPostId(postId);
     commentRepository.deleteCommentsByPostId(postId);
     bookmarkRepository.deleteBookmarksByPostId(postId);
     postRepository.deletePost(postId);
-  }
-
-  private void validateMemberId(Long memberIdOfPost, Long memberId) {
-    if (!Objects.equals(memberIdOfPost, memberId)) {
-      throw new IllegalArgumentException("Member id not matching");
-    }
   }
 }
