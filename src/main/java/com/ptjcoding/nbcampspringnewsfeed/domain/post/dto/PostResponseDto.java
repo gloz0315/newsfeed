@@ -53,7 +53,7 @@ public class PostResponseDto {
         .agreeCount(post.getAgreeCount())
         .disagreeCount(post.getDisagreeCount())
         .createdDate(post.getCreatedDate())
-        .updatedDate(post.getUpdatedDate())
+        .updatedDate(post.getPostUpdatedDate())
         .deletedDate(post.getDeletedDate())
         .build();
   }

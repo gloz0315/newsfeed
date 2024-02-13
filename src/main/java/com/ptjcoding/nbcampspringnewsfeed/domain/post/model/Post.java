@@ -22,6 +22,7 @@ public class Post {
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
   private LocalDateTime deletedDate;
+  private LocalDateTime postUpdatedDate;
 
   public boolean isNotEqualsMemberId(Long memberId) {
     return !Objects.equals(this.memberId, memberId);
