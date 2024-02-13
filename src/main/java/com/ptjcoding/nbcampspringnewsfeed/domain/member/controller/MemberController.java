@@ -2,8 +2,11 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.controller;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,5 +70,15 @@ public class MemberController {
       @PathVariable("memberId") Long memberId
   ) {
     return CommonResponseDto.ok("정보를 조회합니다.", memberService.memberInfo(memberId));
+  }
+
+  @PostMapping
+  public ResponseEntity<CommonResponseDto<NicknameChangeDto>> updateMemberName(
+      @RequestAttribute("member") Member member,
+      @Validated @RequestBody NicknameUpdateRequestDto dto
+  ) {
+    NicknameChangeDto responseDto = memberService.updateMemberName(member, dto);
+
+    return CommonResponseDto.ok("닉네임을 변경하였습니다.", responseDto);
   }
 }

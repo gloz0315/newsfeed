@@ -5,7 +5,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.MemberJpa
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.entity.MemberEntity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberSignupDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.NicknameUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,9 +44,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
   @Override
   public Member findMemberOrElseThrow(Long id) {
-    return memberJpaRepository.findById(id).orElseThrow(
-        () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
-    ).toModel();
+    return findMember(id).toModel();
   }
 
   @Override
@@ -57,10 +56,26 @@ public class MemberRepositoryImpl implements MemberRepository {
 
   @Override
   public void deleteMember(Long id) {
-    MemberEntity memberEntity = memberJpaRepository.findById(id).orElseThrow(
-        () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
-    );
+    MemberEntity memberEntity = findMember(id);
 
     memberJpaRepository.delete(memberEntity);
+  }
+
+  @Override
+  public Member updateMember(Long id, NicknameUpdateDto dto) {
+    MemberEntity memberEntity = findMember(id);
+
+    if(memberEntity.isCurrentName(dto.getNickname())) {
+      throw new IllegalArgumentException("이미 해당 닉네임입니다.");
+    }
+
+    memberEntity.update(dto);
+    return memberEntity.toModel();
+  }
+
+  private MemberEntity findMember(Long id) {
+    return memberJpaRepository.findById(id).orElseThrow(
+        () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
+    );
   }
 }

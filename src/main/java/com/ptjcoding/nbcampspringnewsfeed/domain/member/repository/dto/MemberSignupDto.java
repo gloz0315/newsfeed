@@ -1,4 +1,4 @@
-package com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto;
+package com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto;
 
 import lombok.Getter;
 

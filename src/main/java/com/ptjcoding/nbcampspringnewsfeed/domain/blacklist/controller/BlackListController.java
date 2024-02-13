@@ -27,8 +27,7 @@ public class BlackListController {
       @RequestAttribute("member") Member member,
       @Validated @RequestBody BlackListRequestDto dto
   ) {
-    // TODO: 추후 수정 예정
-    if (member.getRole().equals(MemberRole.USER)) {
+    if(member.isRole(MemberRole.USER)) {
       return CommonResponseDto.badRequest("접근 권한이 없습니다.");
     }
 
@@ -41,8 +40,7 @@ public class BlackListController {
       @RequestAttribute("member") Member member,
       @Validated @RequestBody BlackListRequestDto dto
   ) {
-    // TODO: 추후 수정 예정
-    if (member.getRole().equals(MemberRole.USER)) {
+    if(member.isRole(MemberRole.USER)) {
       return CommonResponseDto.badRequest("접근 권한이 없습니다.");
     }
 
