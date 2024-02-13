@@ -20,6 +20,6 @@ public interface VoteService {
 
   VoteResponseDto updateVote(Member member, Long voteId, VoteUpdateRequestDto requestDto);
 
-  void deleteVote(Member member, Long voteId);
+  void deleteVote(Member member, Long voteId, Boolean isSafe);
 
 }
