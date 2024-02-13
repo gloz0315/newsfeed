@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,4 +22,8 @@ public class Post {
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
   private LocalDateTime deletedDate;
+
+  public boolean isNotEqualsMemberId(Long memberId) {
+    return !Objects.equals(this.memberId, memberId);
+  }
 }

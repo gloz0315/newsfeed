@@ -42,8 +42,7 @@ public class PostRepositoryImpl implements PostRepository {
     PostEntity postEntity = postJpaRepository.findById(postId).orElseThrow(
         () -> new EntityNotFoundException("Post with id " + postId + " not found")
     );
-    postEntity.setTitle(postRequestDto.getTitle());
-    postEntity.setContent(postRequestDto.getContent());
+    postEntity.update(postRequestDto);
     return postEntity.toModel();
   }
 
@@ -63,5 +62,35 @@ public class PostRepositoryImpl implements PostRepository {
   @Override
   public void deletePostsByMemberId(Long memberId) {
     postJpaRepository.deleteAllByMemberId(memberId);
+  }
+
+  @Override
+  public void upAgreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.upAgreeCount();
+  }
+
+  @Override
+  public void downAgreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.downAgreeCount();
+  }
+
+  @Override
+  public void upDisagreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.upDisagreeCount();
+  }
+
+  @Override
+  public void downDisagreeCount(Long postId) {
+    PostEntity postEntity = findPostEntityorElseThrow(postId);
+    postEntity.downDisagreeCount();
+  }
+
+  public PostEntity findPostEntityorElseThrow(Long postId) {
+    return postJpaRepository.findById(postId).orElseThrow(
+        () -> new EntityNotFoundException("Post with id " + postId + " not found")
+    );
   }
 }
