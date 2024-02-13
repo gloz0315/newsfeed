@@ -1,7 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jdk.jfr.BooleanFlag;
 import lombok.Getter;
@@ -16,8 +14,6 @@ public class VoteCreateRequestDto {
 
   @NonNull
   @BooleanFlag
-  @Max(1)
-  @Min(0)
   private Boolean isAgree;
 
 }
