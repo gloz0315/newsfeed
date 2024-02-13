@@ -79,7 +79,8 @@ public class VoteServiceImpl implements VoteService {
 
     List<Comment> comments = commentRepository.findCommentsByMemberIdAndPostId(member.getId(), postId);
 
-    if (isSafe != null && isSafe && !comments.isEmpty()) {
+    boolean isSafeDeletion = (isSafe != null) && isSafe && !comments.isEmpty();
+    if (isSafeDeletion) {
       throw new RuntimeException("해당 게시글의 댓글을 먼저 삭제해주세요.");
     }
 
