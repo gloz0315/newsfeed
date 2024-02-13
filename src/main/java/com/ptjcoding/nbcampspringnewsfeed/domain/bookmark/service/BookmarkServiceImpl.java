@@ -25,8 +25,13 @@ public class BookmarkServiceImpl implements BookmarkService {
   public BookmarkResponseDto createBookmark(Long postId, Long memberId) {
     Member member = memberRepository.findMemberOrElseThrow(memberId);
     Post post = postRepository.findPostOrElseThrow(postId);
-    Bookmark bookmark = bookmarkRepository.createBookmark(postId, member.getId());
-    return BookmarkResponseDto.from(bookmark, post.getTitle());
+    Bookmark bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberId(
+        post.getPostId(), member.getId());
+    if (bookmark != null) {
+      throw new IllegalArgumentException("Bookmark already exists");
+    }
+    return BookmarkResponseDto.from(bookmarkRepository.createBookmark(postId, member.getId())
+        , post.getTitle());
   }
 
   @Override
@@ -47,6 +52,6 @@ public class BookmarkServiceImpl implements BookmarkService {
   public void deleteBookmark(Long postId, Long memberId) {
     Member member = memberRepository.findMemberOrElseThrow(memberId);
     Post post = postRepository.findPostOrElseThrow(postId);
-    bookmarkRepository.deleteBookmark(postId, memberId);
+    bookmarkRepository.deleteBookmark(post.getPostId(), member.getId());
   }
 }

@@ -8,6 +8,8 @@ public interface BookmarkJpaRepository extends JpaRepository<BookmarkEntity, Lon
 
   List<BookmarkEntity> findAllByMemberId(Long memberId);
 
+  BookmarkEntity findBookmarkEntityByPostIdAndMemberId(Long postId, Long memberId);
+
   void deleteByPostIdAndMemberId(Long postId, Long memberId);
 
   void deleteByPostId(Long postId);
