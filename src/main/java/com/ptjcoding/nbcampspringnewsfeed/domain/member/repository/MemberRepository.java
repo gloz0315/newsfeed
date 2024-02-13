@@ -3,7 +3,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.repository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberNicknameUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.NicknameUpdateDto;
 
 public interface MemberRepository {
 
@@ -13,7 +13,7 @@ public interface MemberRepository {
 
   void deleteMember(Long id);
 
-  Member updateMember(Long id, MemberNicknameUpdateDto dto);
+  Member updateMember(Long id, NicknameUpdateDto dto);
 
   Member checkPassword(LoginRequestDto dto);
 

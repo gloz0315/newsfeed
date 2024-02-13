@@ -6,15 +6,15 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRep
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.MemberNicknameUpdateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberNicknameChangeDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberNicknameUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.NicknameUpdateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
@@ -90,10 +90,10 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public MemberNicknameChangeDto updateMemberName(Member member,
-      MemberNicknameUpdateRequestDto dto) {
+  public NicknameChangeDto updateMemberName(Member member,
+      NicknameUpdateRequestDto dto) {
     Member changeMember = memberRepository.updateMember(member.getId(),
-        MemberNicknameUpdateDto.of(dto));
-    return MemberNicknameChangeDto.of(member.getNickname(), changeMember.getNickname());
+        NicknameUpdateDto.of(dto));
+    return NicknameChangeDto.of(member.getNickname(), changeMember.getNickname());
   }
 }

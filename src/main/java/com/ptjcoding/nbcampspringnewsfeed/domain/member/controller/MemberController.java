@@ -2,11 +2,11 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.controller;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.MemberNicknameUpdateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.MemberService;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberNicknameChangeDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,11 +73,11 @@ public class MemberController {
   }
 
   @PostMapping
-  public ResponseEntity<CommonResponseDto<MemberNicknameChangeDto>> updateMemberName(
+  public ResponseEntity<CommonResponseDto<NicknameChangeDto>> updateMemberName(
       @RequestAttribute("member") Member member,
-      @Validated @RequestBody MemberNicknameUpdateRequestDto dto
+      @Validated @RequestBody NicknameUpdateRequestDto dto
   ) {
-    MemberNicknameChangeDto responseDto = memberService.updateMemberName(member, dto);
+    NicknameChangeDto responseDto = memberService.updateMemberName(member, dto);
 
     return CommonResponseDto.ok("닉네임을 변경하였습니다.", responseDto);
   }

@@ -1,10 +1,10 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.member.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.LoginRequestDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.MemberNicknameUpdateRequestDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.NicknameUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.dto.SignupRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberNicknameChangeDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChangeDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberInfoDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.MemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +22,6 @@ public interface MemberService {
 
   MemberInfoDto memberInfo(Long memberId);
 
-  MemberNicknameChangeDto updateMemberName(Member member,
-      MemberNicknameUpdateRequestDto dto);
+  NicknameChangeDto updateMemberName(Member member,
+      NicknameUpdateRequestDto dto);
 }
