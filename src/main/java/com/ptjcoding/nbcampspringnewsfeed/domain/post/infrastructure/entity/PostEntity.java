@@ -63,19 +63,11 @@ public class PostEntity extends Timestamped {
     this.postUpdatedDate = LocalDateTime.now();
   }
 
-  public void updateVote(boolean type, boolean isUp) {
-    if (type) {
-      if (isUp) {
-        ++agreeCount;
-      } else {
-        --agreeCount;
-      }
+  public void updateVote(boolean isAgree, boolean isUp) {
+    if (isAgree) {
+      agreeCount = isUp ? agreeCount + 1 : agreeCount - 1;
     } else {
-      if (isUp) {
-        ++disagreeCount;
-      } else {
-        --disagreeCount;
-      }
+      disagreeCount = isUp ? disagreeCount + 1 : disagreeCount - 1;
     }
   }
 
