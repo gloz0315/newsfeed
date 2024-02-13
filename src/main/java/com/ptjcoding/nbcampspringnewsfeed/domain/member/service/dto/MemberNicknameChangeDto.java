@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberChangeDto {
+public class MemberNicknameChangeDto {
 
   private String prevName;
   private String afterName;
 
-  public static MemberChangeDto of(String prevName, String afterName) {
-    return MemberChangeDto.builder()
+  public static MemberNicknameChangeDto of(String prevName, String afterName) {
+    return MemberNicknameChangeDto.builder()
         .prevName(prevName)
         .afterName(afterName)
         .build();

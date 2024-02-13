@@ -6,7 +6,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.infrastructure.entity.Me
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
-import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberNicknameUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,7 +62,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   }
 
   @Override
-  public Member updateMember(Long id, MemberUpdateDto dto) {
+  public Member updateMember(Long id, MemberNicknameUpdateDto dto) {
     MemberEntity memberEntity = findMember(id);
 
     if (memberEntity.getNickname().equals(dto.getNickname())) {
