@@ -50,6 +50,10 @@ public class MemberEntity extends Timestamped {
     this.nickname = dto.getNickname();
   }
 
+  public boolean isCurrentName(String nickname) {
+    return this.nickname.equals(nickname);
+  }
+
   public static MemberEntity of(String email, String nickname, String password, MemberRole role) {
 
     return MemberEntity.builder()

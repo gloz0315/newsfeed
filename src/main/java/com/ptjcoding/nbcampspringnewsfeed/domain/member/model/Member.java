@@ -17,4 +17,7 @@ public class Member {
   private String password;
   private MemberRole role;
 
+  public boolean isRole(MemberRole memberRole) {
+    return role.getAuthority().equals(memberRole.getAuthority());
+  }
 }

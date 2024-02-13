@@ -65,7 +65,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   public Member updateMember(Long id, NicknameUpdateDto dto) {
     MemberEntity memberEntity = findMember(id);
 
-    if (memberEntity.getNickname().equals(dto.getNickname())) {
+    if(memberEntity.isCurrentName(dto.getNickname())) {
       throw new IllegalArgumentException("이미 해당 닉네임입니다.");
     }
 
