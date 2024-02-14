@@ -31,4 +31,5 @@ public class Post {
   public Long getVoteCount() {
     return agreeCount + disagreeCount;
   }
+
 }

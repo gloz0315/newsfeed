@@ -91,5 +91,6 @@ public class PostServiceImpl implements PostService {
     bookmarkRepository.deleteBookmarksByPostId(postId);
     hallOfFameRepository.deleteHallOfFame(postId);
     postRepository.deletePost(postId);
+
   }
 }
