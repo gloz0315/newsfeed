@@ -44,9 +44,12 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<CommonResponseDto<PostResponseDto>> getPost(@PathVariable Long postId) {
+  public ResponseEntity<CommonResponseDto<PostResponseDto>> getPost(
+      @PathVariable Long postId,
+      @RequestAttribute Member member
+  ) {
     return CommonResponseDto.ok(GlobalSuccessCode.SEARCH,
-        postService.getPost(postId));
+        postService.getPost(postId, member.getId()));
   }
 
   @GetMapping("/hallOfFame")

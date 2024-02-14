@@ -18,17 +18,20 @@ public class CommentResponseDto {
 
   private final String nickname;
 
+  private final Boolean isAgree;
+
   private final Long parentCommentId;
 
   private final LocalDateTime createdDate;
 
   private final LocalDateTime updatedDate;
 
-  public static CommentResponseDto of(Comment comment, Member member) {
+  public static CommentResponseDto of(Comment comment, Member member, Boolean isAgree) {
     return CommentResponseDto.builder()
         .commentId(comment.getCommentId())
         .content(comment.getContent())
         .nickname(member.getNickname())
+        .isAgree(isAgree)
         .parentCommentId(comment.getParentCommentId())
         .createdDate(comment.getCreatedDate())
         .updatedDate(comment.getUpdatedDate())

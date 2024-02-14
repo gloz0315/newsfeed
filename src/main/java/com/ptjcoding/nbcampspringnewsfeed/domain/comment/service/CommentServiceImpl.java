@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
         .parentCommentId(parentCommentId)
         .build();
 
-    return CommentResponseDto.of(commentRepository.createComment(createDto), member);
+    return CommentResponseDto.of(commentRepository.createComment(createDto), member, null);
   }
 
   @Override
@@ -59,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = commentRepository.findCommentOrElseThrow(commentId);
     Member member = memberRepository.findMemberOrElseThrow(comment.getMemberId());
 
-    return CommentResponseDto.of(comment, member);
+    return CommentResponseDto.of(comment, member, null);
   }
 
   @Override
@@ -67,9 +67,12 @@ public class CommentServiceImpl implements CommentService {
   public List<CommentResponseDto> getCommentsByPostId(Long postId) {
     return commentRepository.findCommentsByPostId(postId)
         .stream()
-        .map(comment -> CommentResponseDto.of(comment,
-            memberRepository.findMemberOrElseThrow(comment.getMemberId())))
-        .toList();
+        .map(comment -> {
+          return CommentResponseDto.of(comment,
+              memberRepository.findMemberOrElseThrow(comment.getMemberId()),
+              null
+          );
+        }).toList();
   }
 
   @Override
@@ -78,7 +81,7 @@ public class CommentServiceImpl implements CommentService {
     return commentRepository.findCommentsByMemberId(memberId)
         .stream()
         .map(comment -> CommentResponseDto.of(comment,
-            memberRepository.findMemberOrElseThrow(comment.getMemberId())))
+            memberRepository.findMemberOrElseThrow(comment.getMemberId()), null))
         .toList();
   }
 
@@ -90,7 +93,8 @@ public class CommentServiceImpl implements CommentService {
 
     CommentUpdateDto updateDto = CommentUpdateDto.of(requestDto);
 
-    return CommentResponseDto.of(commentRepository.updateComment(commentId, updateDto), member);
+    return CommentResponseDto.of(commentRepository.updateComment(commentId, updateDto), member,
+        null);
   }
 
   @Override
