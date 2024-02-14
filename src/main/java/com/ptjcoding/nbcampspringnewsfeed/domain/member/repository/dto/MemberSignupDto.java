@@ -1,5 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto;
 
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -20,7 +22,7 @@ public class MemberSignupDto {
 
   private void checkPasswordEquals(String password, String checkPassword) {
     if (!password.equals(checkPassword)) {
-      throw new IllegalArgumentException("비밀번호가 서로 맞지 않습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.NOT_EQUAL);
     }
   }
 }

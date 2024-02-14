@@ -7,6 +7,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.MemberSignupDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.dto.NicknameUpdateDto;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,11 +34,11 @@ public class MemberRepositoryImpl implements MemberRepository {
   @Override
   public Member checkPassword(LoginRequestDto dto) {
     MemberEntity entity = memberJpaRepository.findByEmail(dto.getEmail()).orElseThrow(
-        () -> new EntityNotFoundException("해당 이메일이 존재하지 않습니다.")
+        EntityNotFoundException::new
     );
 
     if (!passwordEncoder.matches(dto.getPassword(), entity.getPassword())) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.NOT_EQUAL);
     }
 
     return entity.toModel();
@@ -50,7 +52,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   @Override
   public void checkEmail(String email) {
     if (memberJpaRepository.findByEmail(email).isPresent()) {
-      throw new IllegalArgumentException("해당 이메일이 존재합니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
     }
   }
 
@@ -66,7 +68,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     MemberEntity memberEntity = findMember(id);
 
     if(memberEntity.isCurrentName(dto.getNickname())) {
-      throw new IllegalArgumentException("이미 해당 닉네임입니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.UNCHANGED);
     }
 
     memberEntity.update(dto);
@@ -75,7 +77,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
   private MemberEntity findMember(Long id) {
     return memberJpaRepository.findById(id).orElseThrow(
-        () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
+        EntityNotFoundException::new
     );
   }
 }

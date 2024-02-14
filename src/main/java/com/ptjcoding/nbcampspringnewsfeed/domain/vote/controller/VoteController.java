@@ -6,6 +6,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteUpdateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.service.VoteService;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +35,7 @@ public class VoteController {
   ) {
     VoteResponseDto responseDto = voteService.createVote(member, requestDto);
 
-    return CommonResponseDto.ok("투표 등록 성공", responseDto);
+    return CommonResponseDto.ok(GlobalSuccessCode.CREATE, responseDto);
   }
 
   @PutMapping("/{voteId}")
@@ -45,7 +46,7 @@ public class VoteController {
   ) {
     VoteResponseDto responseDto = voteService.updateVote(member, voteId, requestDto);
 
-    return CommonResponseDto.ok("투표 수정 성공", responseDto);
+    return CommonResponseDto.ok(GlobalSuccessCode.UPDATE, responseDto);
   }
 
   @DeleteMapping("/{voteId}")
@@ -56,7 +57,7 @@ public class VoteController {
   ) {
     voteService.deleteVote(member, voteId, isSafe);
 
-    return CommonResponseDto.ok("투표 삭제 성공", null);
+    return CommonResponseDto.ok(GlobalSuccessCode.DELETE, null);
   }
 
 }

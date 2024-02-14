@@ -6,7 +6,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.dto.CommentU
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.entity.CommentEntity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -25,8 +26,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Comment findCommentOrElseThrow(Long commentId) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
-        .orElseThrow(() -> new EntityNotFoundException(
-            "Comment with id " + commentId + " not found"));
+        .orElseThrow(() -> new CustomRuntimeException(GlobalErrorCode.NOT_FOUND));
 
     return commentEntity.toModel();
   }
@@ -58,8 +58,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Comment updateComment(Long commentId, CommentUpdateDto updateDto) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
-        .orElseThrow(() -> new EntityNotFoundException(
-            "Comment with id " + commentId + " not found"));
+        .orElseThrow(() -> new CustomRuntimeException(
+            GlobalErrorCode.NOT_FOUND));
 
     commentEntity.update(updateDto);
 
@@ -69,8 +69,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public void deleteComment(Long commentId) {
     CommentEntity commentEntity = commentJpaRepository.findById(commentId)
-        .orElseThrow(() -> new EntityNotFoundException(
-            "Comment with id " + commentId + " not found"));
+        .orElseThrow(() -> new CustomRuntimeException(
+            GlobalErrorCode.NOT_FOUND));
 
     commentJpaRepository.delete(commentEntity);
   }

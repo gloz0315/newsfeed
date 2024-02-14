@@ -7,6 +7,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     Optional<Bookmark> bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberId(
         post.getPostId(), member.getId());
     if (bookmark.isPresent()) {
-      throw new IllegalArgumentException("Bookmark already exists");
+      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
     }
     return BookmarkResponseDto.from(bookmarkRepository.createBookmark(postId, member.getId())
         , post.getTitle());

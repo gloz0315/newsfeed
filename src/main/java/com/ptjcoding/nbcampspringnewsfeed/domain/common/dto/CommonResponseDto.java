@@ -1,6 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,12 @@ public class CommonResponseDto<T> {
 	private String message;
 	private T data;
 
-	public static <T> ResponseEntity<CommonResponseDto<T>> ok(String message, T data) {
-		return ResponseEntity.ok(new CommonResponseDto<>(HttpStatus.OK, message, data));
+	public static <T> ResponseEntity<CommonResponseDto<T>> ok(
+			GlobalSuccessCode globalSuccessCode,
+			T data
+	) {
+		return ResponseEntity.ok(
+				new CommonResponseDto<>(HttpStatus.OK, globalSuccessCode.getMessage(), data));
 	}
 
 	public static <T> ResponseEntity<CommonResponseDto<T>> badRequest(String message) {

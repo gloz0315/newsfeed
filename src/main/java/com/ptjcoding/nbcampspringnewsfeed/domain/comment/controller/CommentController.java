@@ -6,6 +6,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentUpdateReques
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.service.CommentService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,7 @@ public class CommentController {
   ) {
     CommentResponseDto responseDto = commentService.createComment(member, requestDto);
 
-    return CommonResponseDto.ok("댓글 생성 성공", responseDto);
+    return CommonResponseDto.ok(GlobalSuccessCode.CREATE, responseDto);
   }
 
   @PutMapping("/{commentId}")
@@ -43,7 +44,7 @@ public class CommentController {
   ) {
     CommentResponseDto responseDto = commentService.updateComment(member, commentId, requestDto);
 
-    return CommonResponseDto.ok("댓글 수정 성공", responseDto);
+    return CommonResponseDto.ok(GlobalSuccessCode.UPDATE, responseDto);
   }
 
   @DeleteMapping("/{commentId}")
@@ -52,7 +53,7 @@ public class CommentController {
   ) {
     commentService.deleteComment(member, commentId);
 
-    return CommonResponseDto.ok("댓글 삭제 성공", null);
+    return CommonResponseDto.ok(GlobalSuccessCode.DELETE, null);
   }
 
 }

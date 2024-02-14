@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class BlackListRequestDto {
 
-  @NotBlank(message = "email은 공백일 수 없음")
-  @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "해당 이메일 표현식이 아닙니다.")
+  @NotBlank
+  @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
   private String email;
 
 }

@@ -2,7 +2,8 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.infrastructure.BlackListJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.infrastructure.entity.BlackListEntity;
-import jakarta.persistence.EntityNotFoundException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,7 @@ public class BlackListRepositoryImpl implements BlackListRepository {
   @Override
   public void register(String email) {
     if (checkEmail(email)) {
-      // TODO: 예외처리에 대한 커스텀은 나중에 한꺼번에 만들 예정
-      throw new RuntimeException("해당 이메일이 존재합니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
     }
 
     blackListJpaRepository.save(BlackListEntity.of(email));
@@ -25,7 +25,7 @@ public class BlackListRepositoryImpl implements BlackListRepository {
   @Override
   public void deregister(String email) {
     BlackListEntity findEntity = blackListJpaRepository.findByEmail(email)
-        .orElseThrow(() -> new EntityNotFoundException("해당 이메일이 존재하지 않습니다."));
+        .orElseThrow(() -> new CustomRuntimeException(GlobalErrorCode.NOT_FOUND));
 
     blackListJpaRepository.delete(findEntity);
   }
