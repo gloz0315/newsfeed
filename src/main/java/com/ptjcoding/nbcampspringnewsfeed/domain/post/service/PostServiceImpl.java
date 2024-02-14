@@ -1,7 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRepository;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.hall_of_fame.repository.HallOfFameRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
@@ -10,10 +10,12 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
 import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
 import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,11 +53,24 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public PostResponseDto getPost(Long postId) {
+  public PostResponseDto getPost(Long postId, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
     Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
-    List<Comment> commentList = commentRepository.findCommentsByPostId(post.getPostId());
-    return PostResponseDto.fromPostDetail(post, member.getNickname(), commentList);
+    List<CommentResponseDto> commentList = commentRepository.findCommentsByPostId(postId)
+        .stream()
+        .map(comment -> {
+          Optional<Boolean> isAgree = voteRepository
+              .findVoteByMemberIdAndPostId(comment.getMemberId(), comment.getPostId())
+              .map(Vote::getIsAgree);
+          return CommentResponseDto.of(comment,
+              memberRepository.findMemberOrElseThrow(comment.getMemberId()),
+              isAgree.orElse(null));
+        }).toList();
+    Optional<Boolean> isAgree = voteRepository
+        .findVoteByMemberIdAndPostId(memberId, postId)
+        .map(Vote::getIsAgree);
+    return PostResponseDto.fromPostDetail(post, member.getNickname(), commentList,
+        isAgree.orElse(null));
   }
 
   @Override
@@ -77,8 +92,17 @@ public class PostServiceImpl implements PostService {
     }
     Post updatePost = postRepository.updatePost(postId, postRequestDto);
     Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
-    List<Comment> commentList = commentRepository.findCommentsByPostId(postId);
-    return PostResponseDto.fromPostDetail(updatePost, member.getNickname(), commentList);
+    List<CommentResponseDto> commentList = commentRepository.findCommentsByPostId(postId)
+        .stream()
+        .map(comment -> {
+          Optional<Boolean> isAgree = voteRepository
+              .findVoteByMemberIdAndPostId(comment.getMemberId(), comment.getPostId())
+              .map(Vote::getIsAgree);
+          return CommentResponseDto.of(comment,
+              memberRepository.findMemberOrElseThrow(comment.getMemberId()),
+              isAgree.orElse(null));
+        }).toList();
+    return PostResponseDto.fromPostDetail(updatePost, member.getNickname(), commentList, null);
   }
 
   @Override

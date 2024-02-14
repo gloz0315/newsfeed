@@ -1,7 +1,7 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
+import com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto.CommentResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,8 @@ public class PostResponseDto {
   private final String content;
   private final Long agreeCount;
   private final Long disagreeCount;
-  private final List<Comment> commentList;
+  private final Boolean isAgree;
+  private final List<CommentResponseDto> commentList;
   private final LocalDateTime createdDate;
   private final LocalDateTime updatedDate;
   private final LocalDateTime deletedDate;
@@ -42,13 +43,15 @@ public class PostResponseDto {
   public static PostResponseDto fromPostDetail(
       Post post,
       String nickname,
-      List<Comment> commentList
+      List<CommentResponseDto> commentList,
+      Boolean isAgree
   ) {
     return PostResponseDto.builder()
         .postId(post.getPostId())
         .nickname(nickname)
         .title(post.getTitle())
         .content(post.getContent())
+        .isAgree(isAgree)
         .commentList(commentList)
         .agreeCount(post.getAgreeCount())
         .disagreeCount(post.getDisagreeCount())

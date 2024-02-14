@@ -10,7 +10,7 @@ public interface PostService {
 
   List<PostResponseDto> getPosts();
 
-  PostResponseDto getPost(Long postId);
+  PostResponseDto getPost(Long postId, Long memberId);
 
   List<PostResponseDto> getHallOfFame();
 
