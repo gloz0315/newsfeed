@@ -5,6 +5,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.service.BlackListServ
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,11 +30,11 @@ public class BlackListController {
       @Validated @RequestBody BlackListRequestDto dto
   ) {
     if(member.isRole(MemberRole.USER)) {
-      return CommonResponseDto.badRequest("접근 권한이 없습니다.");
+      return CommonResponseDto.badRequest(GlobalErrorCode.UNAUTHORIZED.getMessage());
     }
 
     blackListService.register(dto);
-    return CommonResponseDto.ok("블랙리스트에 추가하였습니다.", dto.getEmail());
+    return CommonResponseDto.ok(GlobalSuccessCode.REGISTER, dto.getEmail());
   }
 
   @DeleteMapping("/deregister")
@@ -41,10 +43,10 @@ public class BlackListController {
       @Validated @RequestBody BlackListRequestDto dto
   ) {
     if(member.isRole(MemberRole.USER)) {
-      return CommonResponseDto.badRequest("접근 권한이 없습니다.");
+      return CommonResponseDto.badRequest(GlobalErrorCode.UNAUTHORIZED.getMessage());
     }
 
     blackListService.deregister(dto);
-    return CommonResponseDto.ok("블랙리스트에 삭제하였습니다.", dto.getEmail());
+    return CommonResponseDto.ok(GlobalSuccessCode.DELETE, dto.getEmail());
   }
 }

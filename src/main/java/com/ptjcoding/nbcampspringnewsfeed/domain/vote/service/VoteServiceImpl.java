@@ -14,6 +14,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.vote.model.Vote;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteCreateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.dto.VoteUpdateDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,7 @@ public class VoteServiceImpl implements VoteService {
     Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId, postId);
 
     if (vote.isPresent()) {
-      throw new RuntimeException("투표가 이미 존재함");
+      throw new RuntimeException();
     }
 
     VoteCreateDto createDto = VoteCreateDto.of(memberId, requestDto);
@@ -64,10 +66,10 @@ public class VoteServiceImpl implements VoteService {
     Vote vote = voteRepository.findVoteOrElseThrow(voteId);
 
     if (!vote.checkMemberIdEqual(memberId)) {
-      throw new RuntimeException("접근 권한이 없습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
     }
     if (vote.checkIsAgreeEqual(requestDto.getIsAgree())) {
-      throw new IllegalArgumentException("변경 사항이 없습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.UNCHANGED);
     }
 
     Long postId = vote.getPostId();
@@ -88,7 +90,7 @@ public class VoteServiceImpl implements VoteService {
   public void deleteVote(Member member, Long voteId, Boolean isSafe) {
     Vote vote = voteRepository.findVoteOrElseThrow(voteId);
     if (!vote.checkMemberIdEqual(member.getId())) {
-      throw new RuntimeException("접근 권한이 없습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
     }
 
     Long postId = vote.getPostId();
@@ -98,7 +100,7 @@ public class VoteServiceImpl implements VoteService {
 
     boolean isSafeDeletion = (isSafe != null) && isSafe && !comments.isEmpty();
     if (isSafeDeletion) {
-      throw new RuntimeException("해당 게시글의 댓글을 먼저 삭제해주세요.");
+      throw new CustomRuntimeException(GlobalErrorCode.SAFEGUARD);
     }
 
     if (Boolean.TRUE.equals(vote.getIsAgree())) {

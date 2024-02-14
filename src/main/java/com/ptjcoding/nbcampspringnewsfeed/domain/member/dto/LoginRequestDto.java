@@ -7,14 +7,14 @@ import lombok.Getter;
 @Getter
 public class LoginRequestDto {
 
-  @NotBlank(message = "email은 공백일 수 없음")
-  @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "해당 이메일 표현식이 아닙니다.")
+  @NotBlank
+  @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
   private String email;
 
-  @NotBlank(message = "password는 공백일 수 없습니다.")
-  @Pattern(regexp = "^(?!.+ ).+$", message = "paswword는 공백을 포함하면 안됨")
-  @Pattern(regexp = "^(?=.*\\d).+$", message = "paswword는 숫자를 포함해야 함")
-  @Pattern(regexp = "^(?=.*[a-z]).+$", message = "paswword는 소문자를 포함해야 함")
-  @Pattern(regexp = "^(?=.*[A-Z]).+$", message = "paswword는 대문자를 포함해야 함")
+  @NotBlank
+  @Pattern(regexp = "^(?!.+ ).+$")
+  @Pattern(regexp = "^(?=.*\\d).+$")
+  @Pattern(regexp = "^(?=.*[a-z]).+$")
+  @Pattern(regexp = "^(?=.*[A-Z]).+$")
   private String password;
 }

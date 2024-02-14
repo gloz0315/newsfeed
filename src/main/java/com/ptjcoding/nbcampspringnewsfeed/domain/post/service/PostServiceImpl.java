@@ -11,6 +11,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,7 +73,7 @@ public class PostServiceImpl implements PostService {
   public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
     if (post.isNotEqualsMemberId(memberId)) {
-      throw new IllegalArgumentException("Member id not matching");
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
     }
     Post updatePost = postRepository.updatePost(postId, postRequestDto);
     Member member = memberRepository.findMemberOrElseThrow(post.getMemberId());
@@ -83,7 +85,7 @@ public class PostServiceImpl implements PostService {
   public void deletePost(Long postId, Long memberId) {
     Post post = postRepository.findPostOrElseThrow(postId);
     if (post.isNotEqualsMemberId(memberId)) {
-      throw new IllegalArgumentException("Member id not matching");
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
     }
 
     voteRepository.deleteVotesByPostId(postId);

@@ -12,6 +12,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +38,16 @@ public class CommentServiceImpl implements CommentService {
     postRepository.findPostOrElseThrow(requestDto.getPostId());
     voteRepository.findVoteByMemberIdAndPostIdOrElseThrow(memberId, requestDto.getPostId());
 
+    Long parentCommentId = requestDto.getParentCommentId();
+    if (parentCommentId != null) {
+      commentRepository.findCommentOrElseThrow(parentCommentId);
+    }
+
     CommentCreateDto createDto = CommentCreateDto.builder()
         .content(requestDto.getContent())
         .memberId(memberId)
         .postId(requestDto.getPostId())
-        .parentCommentId(requestDto.getParentCommentId())
+        .parentCommentId(parentCommentId)
         .build();
 
     return CommentResponseDto.of(commentRepository.createComment(createDto), member);
@@ -109,7 +116,7 @@ public class CommentServiceImpl implements CommentService {
     boolean isIllegalRequest = !Objects.equals(comment.getMemberId(), member.getId())
                                && member.getRole() == MemberRole.USER;
     if (isIllegalRequest) {
-      throw new RuntimeException("접근 권한이 없습니다.");
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
     }
   }
 

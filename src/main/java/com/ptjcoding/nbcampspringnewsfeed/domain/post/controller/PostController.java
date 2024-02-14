@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.service.PostService;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,25 +33,25 @@ public class PostController {
       @Validated @RequestBody PostRequestDto postRequestDto,
       @RequestAttribute("member") Member member
   ) {
-    return CommonResponseDto.ok("게시글 작성 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.CREATE,
         postService.createPost(postRequestDto, member.getId()));
   }
 
   @GetMapping
   public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getPosts() {
-    return CommonResponseDto.ok("모든 게시글 조회 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.SEARCH,
         postService.getPosts());
   }
 
   @GetMapping("/{postId}")
   public ResponseEntity<CommonResponseDto<PostResponseDto>> getPost(@PathVariable Long postId) {
-    return CommonResponseDto.ok("게시글 단 건 조회 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.SEARCH,
         postService.getPost(postId));
   }
 
   @GetMapping("/hallOfFame")
   public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getHallOfFame() {
-    return CommonResponseDto.ok("명예의 전당 조회 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.SEARCH,
         postService.getHallOfFame());
   }
 
@@ -61,7 +62,7 @@ public class PostController {
           @Valid @RequestBody PostRequestDto postRequestDto,
           @RequestAttribute("member") Member member
       ) {
-    return CommonResponseDto.ok(postId + "번 게시글 수정 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.UPDATE,
         postService.updatePost(postId, postRequestDto, member.getId()));
   }
 
@@ -72,6 +73,6 @@ public class PostController {
           @RequestAttribute("member") Member member
       ) {
     postService.deletePost(postId, member.getId());
-    return CommonResponseDto.ok(postId + "번 게시글 삭제 성공", null);
+    return CommonResponseDto.ok(GlobalSuccessCode.DELETE, null);
   }
 }

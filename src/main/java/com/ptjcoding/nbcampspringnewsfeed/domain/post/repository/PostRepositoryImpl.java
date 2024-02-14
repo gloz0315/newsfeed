@@ -5,7 +5,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.post.dto.PostRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.PostJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.infrastructure.entity.PostEntity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
-import jakarta.persistence.EntityNotFoundException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,14 +34,14 @@ public class PostRepositoryImpl implements PostRepository {
   @Override
   public Post findPostOrElseThrow(Long postId) {
     return postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException(postId + "번 게시글은 존재하지 않습니다.")
+        () -> new CustomRuntimeException(GlobalErrorCode.NOT_FOUND)
     ).toModel();
   }
 
   @Override
   public Post updatePost(Long postId, PostRequestDto postRequestDto) {
     PostEntity postEntity = postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException("Post with id " + postId + " not found")
+        () -> new CustomRuntimeException(GlobalErrorCode.NOT_FOUND)
     );
     postEntity.update(postRequestDto);
     return postEntity.toModel();
@@ -90,7 +91,7 @@ public class PostRepositoryImpl implements PostRepository {
 
   public PostEntity findPostEntityorElseThrow(Long postId) {
     return postJpaRepository.findById(postId).orElseThrow(
-        () -> new EntityNotFoundException("Post with id " + postId + " not found")
+        () -> new CustomRuntimeException(GlobalErrorCode.NOT_FOUND)
     );
   }
 }

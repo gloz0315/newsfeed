@@ -5,6 +5,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.dto.BookmarkResponseDt
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.service.BookmarkService;
 import com.ptjcoding.nbcampspringnewsfeed.domain.common.dto.CommonResponseDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
+import com.ptjcoding.nbcampspringnewsfeed.global.enums.GlobalSuccessCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class BookmarkController {
   public ResponseEntity<CommonResponseDto<BookmarkResponseDto>> createBookmark(
       @PathVariable Long postId, @RequestAttribute("member") Member member
   ) {
-    return CommonResponseDto.ok("북마크 등록 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.REGISTER,
         bookmarkService.createBookmark(postId, member.getId())
     );
   }
@@ -36,7 +37,7 @@ public class BookmarkController {
   public ResponseEntity<CommonResponseDto<List<BookmarkResponseDto>>> getBookmarks(
       @RequestAttribute("member") Member member
   ) {
-    return CommonResponseDto.ok("북마크 조회 성공",
+    return CommonResponseDto.ok(GlobalSuccessCode.SEARCH,
         bookmarkService.getBookmarksByMemberId(member.getId()));
   }
 
@@ -45,6 +46,6 @@ public class BookmarkController {
       @PathVariable Long postId, @RequestAttribute("member") Member member
   ) {
     bookmarkService.deleteBookmark(postId, member.getId());
-    return CommonResponseDto.ok("북마크 삭제 성공", null);
+    return CommonResponseDto.ok(GlobalSuccessCode.DELETE, null);
   }
 }

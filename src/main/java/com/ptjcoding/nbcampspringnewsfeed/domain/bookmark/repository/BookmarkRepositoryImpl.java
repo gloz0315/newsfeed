@@ -3,7 +3,8 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.infrastructrue.BookmarkJpaRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.infrastructrue.Entity.BookmarkEntity;
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.model.Bookmark;
-import jakarta.persistence.EntityNotFoundException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
   public void deleteBookmark(Long postId, Long memberId) {
     Optional<Bookmark> bookmark = findBookmarkByPostIdAndMemberId(postId, memberId);
     if (bookmark.isEmpty()) {
-      throw new EntityNotFoundException("Bookmark not found");
+      throw new CustomRuntimeException(GlobalErrorCode.NOT_FOUND);
     }
     bookmarkJpaRepository.deleteByPostIdAndMemberId(postId, memberId);
   }

@@ -1,11 +1,5 @@
 package com.ptjcoding.nbcampspringnewsfeed.domain.comment.dto;
 
-import static com.ptjcoding.nbcampspringnewsfeed.domain.comment.etc.CommentRequestError.CommentRequestErrorMessage.CONTENT_BLANK;
-import static com.ptjcoding.nbcampspringnewsfeed.domain.comment.etc.CommentRequestError.CommentRequestErrorMessage.CONTENT_MAX_LENGTH;
-import static com.ptjcoding.nbcampspringnewsfeed.domain.comment.etc.CommentRequestError.CommentRequestErrorMessage.PARENTCOMMENTIDSTRING_POSITIVE;
-import static com.ptjcoding.nbcampspringnewsfeed.domain.comment.etc.CommentRequestError.CommentRequestErrorMessage.POSTID_BLANK;
-import static com.ptjcoding.nbcampspringnewsfeed.domain.comment.etc.CommentRequestError.CommentRequestErrorMessage.POSTID_POSITIVE;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -15,16 +9,15 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 public class CommentCreateRequestDto {
 
-  @NotNull(message = CONTENT_BLANK)
-  @NotBlank(message = CONTENT_BLANK)
-  @Length(max = 500, message = CONTENT_MAX_LENGTH)
+  @NotBlank
+  @Length(max = 500)
   private String content;
 
-  @NotNull(message = POSTID_BLANK)
-  @Positive(message = POSTID_POSITIVE)
+  @NotNull
+  @Positive
   private Long postId;
 
-  @Positive(message = PARENTCOMMENTIDSTRING_POSITIVE)
+  @Positive
   private Long parentCommentId;
 
 }
