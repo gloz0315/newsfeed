@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 public class CommentUpdateRequestDto {
 
-  @NotBlank()
+  @NotBlank
   @Length(max = 500)
   private String content;
 
