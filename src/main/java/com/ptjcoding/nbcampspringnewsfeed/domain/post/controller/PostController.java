@@ -54,7 +54,6 @@ public class PostController {
         postService.getHallOfFame());
   }
 
-
   @PutMapping("/{postId}")
   public ResponseEntity<CommonResponseDto<PostResponseDto>> updatePost
       (
