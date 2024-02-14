@@ -8,6 +8,7 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberReposit
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +26,9 @@ public class BookmarkServiceImpl implements BookmarkService {
   public BookmarkResponseDto createBookmark(Long postId, Long memberId) {
     Member member = memberRepository.findMemberOrElseThrow(memberId);
     Post post = postRepository.findPostOrElseThrow(postId);
-    Bookmark bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberId(
+    Optional<Bookmark> bookmark = bookmarkRepository.findBookmarkByPostIdAndMemberId(
         post.getPostId(), member.getId());
-    if (bookmark != null) {
+    if (bookmark.isPresent()) {
       throw new IllegalArgumentException("Bookmark already exists");
     }
     return BookmarkResponseDto.from(bookmarkRepository.createBookmark(postId, member.getId())

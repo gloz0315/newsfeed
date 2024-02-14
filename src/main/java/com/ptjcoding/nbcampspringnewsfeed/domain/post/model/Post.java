@@ -27,4 +27,9 @@ public class Post {
   public boolean isNotEqualsMemberId(Long memberId) {
     return !Objects.equals(this.memberId, memberId);
   }
+
+  public Long getVoteCount() {
+    return agreeCount + disagreeCount;
+  }
+
 }

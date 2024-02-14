@@ -48,6 +48,12 @@ public class PostController {
         postService.getPost(postId));
   }
 
+  @GetMapping("/hallOfFame")
+  public ResponseEntity<CommonResponseDto<List<PostResponseDto>>> getHallOfFame() {
+    return CommonResponseDto.ok("명예의 전당 조회 성공",
+        postService.getHallOfFame());
+  }
+
   @PutMapping("/{postId}")
   public ResponseEntity<CommonResponseDto<PostResponseDto>> updatePost
       (

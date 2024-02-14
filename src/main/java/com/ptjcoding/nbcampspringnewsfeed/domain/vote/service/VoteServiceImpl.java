@@ -2,8 +2,10 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.vote.service;
 
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.hall_of_fame.repository.HallOfFameRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.model.Member;
 import com.ptjcoding.nbcampspringnewsfeed.domain.member.repository.MemberRepository;
+import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteCreateRequestDto;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.dto.VoteResponseDto;
@@ -26,15 +28,16 @@ public class VoteServiceImpl implements VoteService {
 
   private final VoteRepository voteRepository;
   private final PostRepository postRepository;
-  private final CommentRepository commentRepository;
   private final MemberRepository memberRepository;
+  private final CommentRepository commentRepository;
+  private final HallOfFameRepository hallOfFameRepository;
 
   @Override
   public VoteResponseDto createVote(Member member, VoteCreateRequestDto requestDto) {
     Long memberId = member.getId();
     Long postId = requestDto.getPostId();
 
-    postRepository.findPostOrElseThrow(postId);
+    Post post = postRepository.findPostOrElseThrow(postId);
     Optional<Vote> vote = voteRepository.findVoteByMemberIdAndPostId(memberId, postId);
 
     if (vote.isPresent()) {
@@ -49,6 +52,7 @@ public class VoteServiceImpl implements VoteService {
       postRepository.upDisagreeCount(postId);
     }
 
+    hallOfFameRepository.updateTable(postId, post.getVoteCount() + 1);
     String memberNickname = memberRepository.findMemberOrElseThrow(memberId).getNickname();
     return VoteResponseDto.of(voteRepository.createVote(createDto), memberNickname);
   }
@@ -83,7 +87,12 @@ public class VoteServiceImpl implements VoteService {
 
   public void deleteVote(Member member, Long voteId, Boolean isSafe) {
     Vote vote = voteRepository.findVoteOrElseThrow(voteId);
+    if (!vote.checkMemberIdEqual(member.getId())) {
+      throw new RuntimeException("접근 권한이 없습니다.");
+    }
+
     Long postId = vote.getPostId();
+    Post post = postRepository.findPostOrElseThrow(postId);
 
     List<Comment> comments = commentRepository.findCommentsByMemberIdAndPostId(member.getId(), postId);
 
@@ -98,6 +107,7 @@ public class VoteServiceImpl implements VoteService {
       postRepository.downDisagreeCount(postId);
     }
 
+    hallOfFameRepository.updateTable(postId, post.getVoteCount() - 1);
     commentRepository.deleteCommentsByMemberIdAndPostId(member.getId(), postId);
     voteRepository.deleteVote(voteId);
   }

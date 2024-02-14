@@ -12,6 +12,8 @@ public interface PostService {
 
   PostResponseDto getPost(Long postId);
 
+  List<PostResponseDto> getHallOfFame();
+
   PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, Long memberId);
 
   void deletePost(Long postId, Long memberId);
