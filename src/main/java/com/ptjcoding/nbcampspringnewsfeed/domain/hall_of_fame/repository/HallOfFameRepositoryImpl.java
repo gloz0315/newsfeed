@@ -24,6 +24,7 @@ public class HallOfFameRepositoryImpl implements HallOfFameRepository {
   @Override
   public void updateTable(Long postId, Long voteCount) {
     List<HallOfFameEntity> entities = hallOfFameJpaRepository.findAllByOrderByVoteCountDesc();
+    final int MAX_SIZE = 3;
 
     Optional<HallOfFameEntity> existingEntity = entities.stream()
         .filter(entity -> postId.equals(entity.getPostId()))
@@ -34,7 +35,7 @@ public class HallOfFameRepositoryImpl implements HallOfFameRepository {
       return;
     }
 
-    if (entities.size() < 3) {
+    if (entities.size() < MAX_SIZE) {
       hallOfFameJpaRepository.save(new HallOfFameEntity(postId, voteCount));
       return;
     }
