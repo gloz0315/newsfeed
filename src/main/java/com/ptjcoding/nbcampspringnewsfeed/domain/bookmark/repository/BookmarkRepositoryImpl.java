@@ -25,7 +25,6 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
   public Optional<Bookmark> findBookmarkByPostIdAndMemberId(Long postId, Long memberId) {
     return bookmarkJpaRepository.findBookmarkEntityByPostIdAndMemberId(postId, memberId)
         .map(BookmarkEntity::toModel);
-
   }
 
   @Override
