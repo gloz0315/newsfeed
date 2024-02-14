@@ -17,5 +17,4 @@ public enum GlobalErrorCode {
   GlobalErrorCode(String message) {
     this.message = message;
   }
-
 }
