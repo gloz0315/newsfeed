@@ -2,6 +2,7 @@ package com.ptjcoding.nbcampspringnewsfeed.domain.member.service;
 
 import static com.ptjcoding.nbcampspringnewsfeed.domain.member.model.MemberRole.USER;
 
+import com.ptjcoding.nbcampspringnewsfeed.domain.blacklist.repository.BlackListRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.bookmark.repository.BookmarkRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.model.Comment;
 import com.ptjcoding.nbcampspringnewsfeed.domain.comment.repository.interfaces.CommentRepository;
@@ -19,6 +20,8 @@ import com.ptjcoding.nbcampspringnewsfeed.domain.member.service.dto.NicknameChan
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.model.Post;
 import com.ptjcoding.nbcampspringnewsfeed.domain.post.repository.PostRepository;
 import com.ptjcoding.nbcampspringnewsfeed.domain.vote.repository.interfaces.VoteRepository;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.CustomRuntimeException;
+import com.ptjcoding.nbcampspringnewsfeed.global.exception.GlobalErrorCode;
 import com.ptjcoding.nbcampspringnewsfeed.global.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
   private final VoteRepository voteRepository;
   private final BookmarkRepository bookmarkRepository;
   private final HallOfFameRepository hallOfFameRepository;
+  private final BlackListRepository blackListRepository;
   private final JwtProvider jwtProvider;
 
   @Override
@@ -57,6 +61,10 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public void login(LoginRequestDto dto, HttpServletResponse response) {
+    if(blackListRepository.checkEmail(dto.getEmail())) {
+      throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
+    }
+
     Member member = memberRepository.checkPassword(dto);
 
     String accessToken = jwtProvider.generateAccessToken(member.getId(), USER.getAuthority());
