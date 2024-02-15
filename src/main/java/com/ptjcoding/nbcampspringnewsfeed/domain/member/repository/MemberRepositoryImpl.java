@@ -65,7 +65,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   public Member updateMember(Long id, NicknameUpdateDto dto) {
     MemberEntity memberEntity = findMember(id);
 
-    if(memberEntity.isCurrentName(dto.getNickname())) {
+    if (memberEntity.isCurrentName(dto.getNickname())) {
       throw new CustomRuntimeException(GlobalErrorCode.UNCHANGED);
     }
 
