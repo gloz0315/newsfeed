@@ -9,7 +9,7 @@ public interface MemberRepository {
 
   void register(MemberSignupDto dto);
 
-  void checkEmail(String email);
+  boolean checkEmail(String email);
 
   void deleteMember(Long id);
 

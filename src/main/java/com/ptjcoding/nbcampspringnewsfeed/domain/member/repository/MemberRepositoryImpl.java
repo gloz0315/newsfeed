@@ -50,10 +50,8 @@ public class MemberRepositoryImpl implements MemberRepository {
   }
 
   @Override
-  public void checkEmail(String email) {
-    if (memberJpaRepository.findByEmail(email).isPresent()) {
-      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
-    }
+  public boolean checkEmail(String email) {
+    return memberJpaRepository.findByEmail(email).isPresent();
   }
 
   @Override

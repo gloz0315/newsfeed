@@ -50,7 +50,9 @@ public class MemberServiceImpl implements MemberService {
         dto.getPassword(),
         dto.getCheckPassword());
 
-    memberRepository.checkEmail(memberSignupDto.getEmail());
+    if(memberRepository.checkEmail(memberSignupDto.getEmail())) {
+      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
+    }
     memberRepository.register(memberSignupDto);
 
     return MemberResponseDto.builder()
@@ -63,6 +65,10 @@ public class MemberServiceImpl implements MemberService {
   public void login(LoginRequestDto dto, HttpServletResponse response) {
     if(blackListRepository.checkEmail(dto.getEmail())) {
       throw new CustomRuntimeException(GlobalErrorCode.UNAUTHORIZED);
+    }
+
+    if(!memberRepository.checkEmail(dto.getEmail())) {
+      throw new CustomRuntimeException(GlobalErrorCode.NOT_FOUND);
     }
 
     Member member = memberRepository.checkPassword(dto);
