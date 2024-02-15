@@ -50,10 +50,8 @@ public class MemberRepositoryImpl implements MemberRepository {
   }
 
   @Override
-  public void checkEmail(String email) {
-    if (memberJpaRepository.findByEmail(email).isPresent()) {
-      throw new CustomRuntimeException(GlobalErrorCode.ALREADY_EXIST);
-    }
+  public boolean checkEmail(String email) {
+    return memberJpaRepository.findByEmail(email).isPresent();
   }
 
   @Override
@@ -67,7 +65,7 @@ public class MemberRepositoryImpl implements MemberRepository {
   public Member updateMember(Long id, NicknameUpdateDto dto) {
     MemberEntity memberEntity = findMember(id);
 
-    if(memberEntity.isCurrentName(dto.getNickname())) {
+    if (memberEntity.isCurrentName(dto.getNickname())) {
       throw new CustomRuntimeException(GlobalErrorCode.UNCHANGED);
     }
 
