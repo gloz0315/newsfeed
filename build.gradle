@@ -59,6 +59,8 @@ dependencies {
     // MySql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    runtimeOnly 'com.h2database:h2'
+
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -76,6 +78,8 @@ dependencies {
 
     // Springdoc - Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.13'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
