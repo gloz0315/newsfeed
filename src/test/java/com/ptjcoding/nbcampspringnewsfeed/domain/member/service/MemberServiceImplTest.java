@@ -42,7 +42,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 class MemberServiceImplTest {
 
   @Mock
